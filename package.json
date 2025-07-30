@@ -15,6 +15,10 @@
     "format": "prettier --write .",
     "postinstall": "wxt prepare"
   },
+  "dependencies": {
+    "@types/qrcode": "1.5.5",
+    "qrcode": "1.5.4"
+  },
   "devDependencies": {
     "@tsconfig/svelte": "5.0.4",
     "@wxt-dev/module-svelte": "2.0.3",
