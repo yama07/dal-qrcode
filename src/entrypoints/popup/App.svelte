@@ -1,5 +1,5 @@
 <script lang="ts">
-  import QrCodeImage from '../../lib/QrCodeImage.svelte';
+  import QrCodeImage from '@/lib/QrCodeImage.svelte';
 
   let text: string = $state('');
 
