@@ -1,7 +1,19 @@
-# WXT + Svelte
+# Dal QRcode
 
-This template should help get you started developing with Svelte in WXT.
+A simple QR code generation web browser extension 🐾
 
-## Recommended IDE Setup
+## Development
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+```sh
+npm install
+
+## for Google Chrome
+npm run dev
+npm run build
+npm run zip
+
+## for Firefox
+npm run dev:firefox
+npm run build:firefox
+npm run zip:firefox
+```
