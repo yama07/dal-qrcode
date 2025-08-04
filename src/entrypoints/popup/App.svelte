@@ -1,5 +1,6 @@
 <script lang="ts">
-  import QrCodeImage from '@/lib/QrCodeImage.svelte';
+  import Input from '$lib/components/ui/input/input.svelte';
+  import QrCodeImage from '$lib/QrCodeImage.svelte';
 
   let text: string = $state('');
 
@@ -10,17 +11,13 @@
 </script>
 
 <main>
-  {#if text === ''}
-    <p>No active tab found.</p>
-  {:else}
-    <QrCodeImage {text} size={128} />
-  {/if}
+  <div class="grid gap-4 p-6">
+    <QrCodeImage {text} size={256} />
 
-  <div>
-    <input
-      type="text"
+    <Input
       bind:value={text}
       placeholder="Enter text or URL to generate QR code"
+      aria-label="QR Code Input"
     />
   </div>
 </main>
