@@ -2,7 +2,6 @@
   import QRCode from 'qrcode';
   import AppIcon from './AppIcon.svelte';
   import CardContent from './components/ui/card/card-content.svelte';
-  import CardFooter from './components/ui/card/card-footer.svelte';
   import Card from './components/ui/card/card.svelte';
 
   type props = {
@@ -12,6 +11,7 @@
     colorDark?: string;
     colorLight?: string;
     scale?: number;
+    dataUrl?: string;
   };
 
   let {
@@ -21,6 +21,7 @@
     colorDark = '#000000',
     colorLight = '#ffffff',
     scale = 4,
+    dataUrl = $bindable<string>(''),
   }: props = $props();
 
   let qrcode: Promise<string> = $derived(
@@ -34,6 +35,25 @@
       width: size,
     }),
   );
+
+  async function generateDownloadableImage() {
+    try {
+      dataUrl = await QRCode.toDataURL(text, {
+        margin: 2,
+        color: {
+          dark: '#000000',
+          light: '#ffffff',
+        },
+        scale: 4,
+        width: 512,
+      });
+    } catch (e) {
+      dataUrl = '';
+    }
+  }
+  $effect(() => {
+    generateDownloadableImage();
+  });
 </script>
 
 <Card>
@@ -41,7 +61,6 @@
     <CardContent>
       <AppIcon {size} color="gray" alt="Loading" />
     </CardContent>
-    <CardFooter class="flex-col gap-2">generating</CardFooter>
   {:then datastring}
     <CardContent>
       <img src={datastring} alt="QR Code" width={size} height={size} />
