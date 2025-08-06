@@ -9,7 +9,7 @@ export default defineConfig({
   modules: ['@wxt-dev/module-svelte', '@wxt-dev/auto-icons'],
   manifest: {
     name: 'Dal QRcode',
-    permissions: ['tabs'],
+    permissions: ['tabs', 'clipboardWrite'],
   },
   autoIcons: {
     baseIconPath: 'assets/icon.svg',

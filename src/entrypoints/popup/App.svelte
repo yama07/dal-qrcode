@@ -11,7 +11,7 @@
     console.debug('tab:', text);
   });
 
-  function onDownloadClick() {
+  function dataUrlToBlob(dataUrl: string) {
     const base64 = dataUrl.split(',')[1];
     const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
     const byteCharacters = atob(base64);
@@ -20,8 +20,12 @@
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: mimeString });
 
+    return new Blob([byteArray], { type: mimeString });
+  }
+
+  function onDownloadClick() {
+    const blob = dataUrlToBlob(dataUrl);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'Dal-QRcode.png';
@@ -29,6 +33,12 @@
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
+  }
+
+  async function onCopyClick() {
+    const blob = dataUrlToBlob(dataUrl);
+    const item = new ClipboardItem({ [blob.type]: blob });
+    await navigator.clipboard.write([item]);
   }
 </script>
 
@@ -45,5 +55,7 @@
     <Button disabled={dataUrl === ''} onclick={onDownloadClick}>
       Download
     </Button>
+
+    <Button disabled={dataUrl === ''} onclick={onCopyClick}>Copy</Button>
   </div>
 </main>
