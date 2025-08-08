@@ -52,10 +52,11 @@
       aria-label="QR Code Input"
     />
 
-    <Button disabled={dataUrl === ''} onclick={onDownloadClick}>
-      Download
-    </Button>
-
-    <Button disabled={dataUrl === ''} onclick={onCopyClick}>Copy</Button>
+    <div class="flex justify-end gap-4">
+      <Button disabled={dataUrl === ''} onclick={onDownloadClick}>
+        Download
+      </Button>
+      <Button disabled={dataUrl === ''} onclick={onCopyClick}>Copy</Button>
+    </div>
   </div>
 </main>
