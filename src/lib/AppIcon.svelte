@@ -3,11 +3,11 @@
 
   type props = {
     size?: number;
-    alt?: string;
+    label?: string;
     color?: string;
   };
 
-  let { size = 128, alt = 'app icon', color = 'black' }: props = $props();
+  let { size = 128, label = 'app icon', color = 'black' }: props = $props();
 </script>
 
-<AppIcon height={size} width={size} {alt} {color} />
+<AppIcon height={size} width={size} role="img" aria-label={label} {color} />

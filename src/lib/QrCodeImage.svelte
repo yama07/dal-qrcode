@@ -59,7 +59,7 @@
 <Card>
   {#await qrcode}
     <CardContent>
-      <AppIcon {size} color="gray" alt="Loading" />
+      <AppIcon {size} color="gray" label="Loading" />
     </CardContent>
   {:then datastring}
     <CardContent>
@@ -68,9 +68,9 @@
   {:catch error}
     <CardContent>
       {#if !text}
-        <AppIcon {size} color="gray" alt="No data" />
+        <AppIcon {size} color="gray" label="No data" />
       {:else}
-        <AppIcon {size} color="pink" alt="Error" />
+        <AppIcon {size} color="pink" label="Error" />
       {/if}
     </CardContent>
   {/await}
