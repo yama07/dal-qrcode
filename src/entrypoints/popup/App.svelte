@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from '$lib/components/ui/button/button.svelte';
-  import Input from '$lib/components/ui/input/input.svelte';
+  import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import QrCodeImage from '$lib/QrCodeImage.svelte';
 
   let text: string = $state('');
@@ -46,7 +46,7 @@
   <div class="grid gap-4 p-6">
     <QrCodeImage {text} size={256} bind:dataUrl />
 
-    <Input
+    <Textarea
       bind:value={text}
       placeholder="Enter text or URL to generate QR code"
       aria-label="QR Code Input"
