@@ -42,7 +42,7 @@
   }
 </script>
 
-<div class="grid gap-4 p-6">
+<div class="grid gap-4">
   <QrCodeImage {text} size={256} bind:dataUrl />
 
   <Textarea

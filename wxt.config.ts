@@ -10,6 +10,9 @@ export default defineConfig({
   manifest: {
     name: 'Dal QRcode',
     permissions: ['tabs', 'clipboardWrite'],
+    content_security_policy: {
+      extension_pages: "script-src 'self'; child-src 'self' blob:;",
+    },
   },
   autoIcons: {
     baseIconPath: 'assets/icon.svg',

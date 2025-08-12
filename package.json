@@ -17,15 +17,18 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "4.1.11",
+    "qr-scanner": "1.4.2",
     "qrcode": "1.5.4",
     "tailwindcss": "4.1.11"
   },
   "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
     "@lucide/svelte": "^0.536.0",
     "@tsconfig/svelte": "5.0.4",
     "@types/qrcode": "1.5.5",
     "@wxt-dev/auto-icons": "1.0.2",
     "@wxt-dev/module-svelte": "2.0.3",
+    "bits-ui": "^2.9.2",
     "clsx": "^2.1.1",
     "prettier": "3.6.2",
     "prettier-plugin-svelte": "3.4.0",
