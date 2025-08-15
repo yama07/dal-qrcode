@@ -23,7 +23,8 @@
   },
   "devDependencies": {
     "@iconify-json/mdi": "^1.2.3",
-    "@lucide/svelte": "^0.536.0",
+    "@internationalized/date": "^3.8.2",
+    "@lucide/svelte": "^0.539.0",
     "@tsconfig/svelte": "5.0.4",
     "@types/qrcode": "1.5.5",
     "@wxt-dev/auto-icons": "1.0.2",
