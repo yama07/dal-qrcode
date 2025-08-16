@@ -1,8 +1,8 @@
 <script lang="ts">
   import AppIcon from '~icons/assets/icon';
 
-  type props = { file?: File };
-  let { file = $bindable() }: props = $props();
+  type props = { file?: File; label: string };
+  let { file = $bindable(), label }: props = $props();
 
   let isDragOver = $state(false);
 
@@ -74,7 +74,7 @@
       class={`text-sm transition-colors
         ${isDragOver ? 'text-neutral-500' : 'text-neutral-300 group-hover:text-neutral-500'}`}
     >
-      Drag your image file here, or click to select file
+      {label}
     </p>
     <input
       type="file"

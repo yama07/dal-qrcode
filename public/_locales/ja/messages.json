@@ -1,0 +1,56 @@
+{
+  "extName": {
+    "message": "Dal QRcode"
+  },
+  "extDescription": {
+    "message": "QRコードの生成と、画像やカメラからQRコードの読み取りを行います。"
+  },
+  "popup.generate_tab": {
+    "message": "生成"
+  },
+  "popup.scan_tab": {
+    "message": "読み取り"
+  },
+  "popup.generate.download_button": {
+    "message": "ダウンロード"
+  },
+  "popup.generate.copy_button": {
+    "message": "コピー"
+  },
+  "popup.scan.scan-from-image_button": {
+    "message": "画像から読み取る"
+  },
+  "popup.scan.scan-with-camera_button": {
+    "message": "カメラで読み取る"
+  },
+  "scan-from-image.dropzone_label": {
+    "message": "画像ファイルをここにドロップするか、ファイルを選択します。"
+  },
+  "scan-from-image.scan_button": {
+    "message": "読み取る"
+  },
+  "scan-from-image.open-url_button": {
+    "message": "URLを開く"
+  },
+  "scan-from-image.copy_button": {
+    "message": "コピー"
+  },
+  "scan-with-camera.camera-select_label": {
+    "message": "カメラ"
+  },
+  "scan-with-camera.start_button": {
+    "message": "開始"
+  },
+  "scan-with-camera.stop_button": {
+    "message": "停止"
+  },
+  "scan-with-camera.open-url_button": {
+    "message": "URLを開く"
+  },
+  "scan-with-camera.copy_button": {
+    "message": "コピー"
+  },
+  "scan-with-camera.not-available-camera_error": {
+    "message": "利用可能なカメラがありません。"
+  }
+}

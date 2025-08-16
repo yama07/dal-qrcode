@@ -35,7 +35,7 @@
   let cameraList = $state<QrScanner.Camera[]>([]);
   let cameraId = $state<string | undefined>();
   let cameraLabel = $derived(
-    cameraList.find((f) => f.id === cameraId)?.label ?? 'No available camera',
+    cameraList.find((f) => f.id === cameraId)?.label ?? '-',
   );
   let isCameraAvailable = $derived(cameraList.length > 0);
 
@@ -62,7 +62,12 @@
         } else {
           cameraList = [];
           cameraId = undefined;
-          appState = { state: 'error', error: 'No available camera' };
+          appState = {
+            state: 'error',
+            error: browser.i18n.getMessage(
+              'scan-with-camera.not-available-camera_error',
+            ),
+          };
         }
       })
       .catch((error) => {
@@ -178,7 +183,9 @@
       </Card>
 
       <div class="w-full">
-        <label for="camera-select" class="text-sm font-medium">Camera</label>
+        <label for="camera-select" class="text-sm font-medium">
+          {browser.i18n.getMessage('scan-with-camera.camera-select_label')}
+        </label>
         <Select
           type="single"
           bind:value={cameraId}
@@ -209,10 +216,10 @@
         >
           {#if appState.state === 'scanning'}
             <MdiStopCircleOutline />
-            Stop
+            {browser.i18n.getMessage('scan-with-camera.stop_button')}
           {:else}
             <MdiRecordCircleOutline />
-            Start
+            {browser.i18n.getMessage('scan-with-camera.start_button')}
           {/if}
         </Button>
       {:else if appState.state === 'completed'}
@@ -228,7 +235,7 @@
               )}
           >
             <MdiLinkVariant />
-            Open URL
+            {browser.i18n.getMessage('scan-with-camera.open-url_button')}
           </Button>
           <Button
             variant="outline"
@@ -240,7 +247,7 @@
               )}
           >
             <MdiContentCopy />
-            Copy
+            {browser.i18n.getMessage('scan-with-camera.copy_button')}
           </Button>
         </div>
       {:else if appState.state === 'error'}

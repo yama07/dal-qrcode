@@ -8,7 +8,9 @@ export default defineConfig({
   srcDir: 'src',
   modules: ['@wxt-dev/module-svelte', '@wxt-dev/auto-icons'],
   manifest: {
-    name: 'Dal QRcode',
+    name: '__MSG_extName__',
+    description: '__MSG_extDescription__',
+    default_locale: 'en',
     permissions: ['tabs', 'clipboardWrite'],
     content_security_policy: {
       extension_pages: "script-src 'self'; child-src 'self' blob:;",

@@ -94,7 +94,10 @@
               />
             </div>
           {:else}
-            <Dropzone bind:file />
+            <Dropzone
+              bind:file
+              label={browser.i18n.getMessage('scan-from-image.dropzone_label')}
+            />
           {/if}
         </CardContent>
       </Card>
@@ -107,14 +110,14 @@
             onclick={() => openUrl(scanResult?.data)}
           >
             <MdiLinkVariant />
-            Open URL
+            {browser.i18n.getMessage('scan-from-image.open-url_button')}
           </Button>
           <Button
             variant="outline"
             onclick={() => copyToClipboard(scanResult?.data)}
           >
             <MdiContentCopy />
-            Copy
+            {browser.i18n.getMessage('scan-from-image.copy_button')}
           </Button>
         </div>
       {:else if errorMessage}
@@ -133,7 +136,7 @@
           {:else}
             <MdiQrcodeScan />
           {/if}
-          Scan
+          {browser.i18n.getMessage('scan-from-image.scan_button')}
         </Button>
       {/if}
     </div>

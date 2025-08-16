@@ -1,6 +1,6 @@
 {
   "name": "dal-qrcode",
-  "description": "A simple QR code generator 🐾",
+  "description": "A simple QR code generator/scanner 🐾",
   "private": true,
   "version": "0.0.1",
   "type": "module",

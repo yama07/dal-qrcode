@@ -53,8 +53,10 @@
 
   <div class="flex justify-end gap-4">
     <Button disabled={dataUrl === ''} onclick={onDownloadClick}>
-      Download
+      {browser.i18n.getMessage('popup.generate.download_button')}
     </Button>
-    <Button disabled={dataUrl === ''} onclick={onCopyClick}>Copy</Button>
+    <Button disabled={dataUrl === ''} onclick={onCopyClick}>
+      {browser.i18n.getMessage('popup.generate.copy_button')}
+    </Button>
   </div>
 </div>
