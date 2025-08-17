@@ -7,11 +7,11 @@
   import MdiLoading from '~icons/mdi/loading';
   import MdiQrcodeScan from '~icons/mdi/qrcode-scan';
 
+  import Dropzone from '$lib/components/Dropzone.svelte';
   import { Alert, AlertDescription } from '$lib/components/ui/alert';
   import { Button } from '$lib/components/ui/button';
   import { Card, CardContent } from '$lib/components/ui/card';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-  import Dropzone from '$lib/Dropzone.svelte';
 
   let file = $state<File>();
   let scanResult = $state<QrScanner.ScanResult>();
