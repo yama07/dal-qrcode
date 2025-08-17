@@ -17,6 +17,9 @@
   "popup.generate.copy_button": {
     "message": "Copy"
   },
+  "popup.generate.textarea-placeholder": {
+    "message": "Enter a URL or text here"
+  },
   "popup.scan.scan-from-image_button": {
     "message": "Scan from Image"
   },

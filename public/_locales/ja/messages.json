@@ -17,6 +17,9 @@
   "popup.generate.copy_button": {
     "message": "コピー"
   },
+  "popup.generate.textarea-placeholder": {
+    "message": "ここにURLやテキストを入力してください"
+  },
   "popup.scan.scan-from-image_button": {
     "message": "画像から読み取る"
   },
