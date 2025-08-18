@@ -9,15 +9,16 @@
   import Button from '$lib/components/ui/button/button.svelte';
   import { Card, CardContent } from '$lib/components/ui/card';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+  import { copyToClipboard, saveDataUrlAsFile } from '$lib/utils/browser';
 
   type AppState =
     | { state: 'idle' }
     | { state: 'scanning' }
-    | { state: 'error'; error: Error }
     | {
         state: 'completed';
         result: { imgDataUrl: string };
-      };
+      }
+    | { state: 'error'; error: Error };
 
   let appState = $state<AppState>({ state: 'idle' });
   let text: string = $state('');
@@ -49,34 +50,16 @@
       });
   });
 
-  function dataUrlToBlob(dataUrl: string) {
-    const base64 = dataUrl.split(',')[1];
-    const mimeString = dataUrl.split(',')[0].split(':')[1].split(';')[0];
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
+  function handleDownloadClick() {
+    if (appState.state === 'completed') {
+      saveDataUrlAsFile(appState.result.imgDataUrl, 'Dal-QRcode.png');
     }
-    const byteArray = new Uint8Array(byteNumbers);
-
-    return new Blob([byteArray], { type: mimeString });
   }
 
-  function download(dataUrl: string) {
-    const blob = dataUrlToBlob(dataUrl);
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'Dal-QRcode.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-  }
-
-  async function copyToClipboard(dataUrl: string) {
-    const blob = dataUrlToBlob(dataUrl);
-    const item = new ClipboardItem({ [blob.type]: blob });
-    await navigator.clipboard.write([item]);
+  function handleCopyClick() {
+    if (appState.state === 'completed') {
+      copyToClipboard(appState.result.imgDataUrl, 'image');
+    }
   }
 </script>
 
@@ -114,22 +97,14 @@
     <div class="flex justify-end gap-4">
       <Button
         disabled={appState.state !== 'completed'}
-        onclick={() => {
-          if (appState.state === 'completed') {
-            download(appState.result.imgDataUrl);
-          }
-        }}
+        onclick={handleDownloadClick}
       >
         <MdiTrayDownload />
         {browser.i18n.getMessage('popup.generate.download_button')}
       </Button>
       <Button
         disabled={appState.state !== 'completed'}
-        onclick={() => {
-          if (appState.state === 'completed') {
-            copyToClipboard(appState.result.imgDataUrl);
-          }
-        }}
+        onclick={handleCopyClick}
       >
         <MdiContentCopy />
         {browser.i18n.getMessage('popup.generate.copy_button')}

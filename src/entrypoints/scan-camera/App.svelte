@@ -18,16 +18,17 @@
     SelectTrigger,
   } from '$lib/components/ui/select';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+  import { copyToClipboard, isBrowsableUrl } from '$lib/utils/browser';
 
   type AppState =
     | { state: 'initializing' }
     | { state: 'idle' }
     | { state: 'scanning' }
-    | { state: 'error'; error: string | Error }
     | {
         state: 'completed';
         result: QrScanner.ScanResult & { imgDataUrl: string };
-      };
+      }
+    | { state: 'error'; error: string | Error };
 
   let videoElement: HTMLVideoElement;
   let scanner: QrScanner | undefined;
@@ -120,30 +121,19 @@
     appState = { state: 'idle' };
   }
 
-  async function copyToClipboard(varlue: string | undefined) {
-    if (!varlue) return;
-
-    await navigator.clipboard.writeText(varlue);
-  }
-
-  function isURL(value: string | undefined): boolean {
-    if (!value) return false;
-
-    try {
-      const url = new URL(value);
-      return ['http:', 'https:'].includes(url.protocol);
-    } catch (error) {
-      return false;
+  function handleOpenUrlClick() {
+    if (appState.state === 'completed') {
+      browser.tabs.create({
+        url: appState.result.data,
+        active: true,
+      });
     }
   }
 
-  async function openUrl(url: string | undefined) {
-    if (!url) return;
-
-    await browser.tabs.create({
-      url,
-      active: true,
-    });
+  function handleCopyClick() {
+    if (appState.state === 'completed') {
+      copyToClipboard(appState.result.data, 'text');
+    }
   }
 </script>
 
@@ -226,26 +216,13 @@
         <Textarea bind:value={appState.result.data} readonly />
         <div class="flex justify-end gap-4">
           <Button
-            disabled={!isURL(appState.result.data)}
-            onclick={() =>
-              openUrl(
-                appState.state === 'completed'
-                  ? appState.result.data
-                  : undefined,
-              )}
+            disabled={!isBrowsableUrl(appState.result.data)}
+            onclick={handleOpenUrlClick}
           >
             <MdiLinkVariant />
             {browser.i18n.getMessage('scan-with-camera.open-url_button')}
           </Button>
-          <Button
-            variant="outline"
-            onclick={() =>
-              copyToClipboard(
-                appState.state === 'completed'
-                  ? appState.result.data
-                  : undefined,
-              )}
-          >
+          <Button variant="outline" onclick={handleCopyClick}>
             <MdiContentCopy />
             {browser.i18n.getMessage('scan-with-camera.copy_button')}
           </Button>

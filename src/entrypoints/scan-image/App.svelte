@@ -12,69 +12,58 @@
   import { Button } from '$lib/components/ui/button';
   import { Card, CardContent } from '$lib/components/ui/card';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+  import { copyToClipboard, isBrowsableUrl } from '$lib/utils/browser';
 
+  type AppState =
+    | { state: 'idle' }
+    | { state: 'loaded' }
+    | { state: 'scanning' }
+    | { state: 'completed'; result: QrScanner.ScanResult }
+    | { state: 'error'; error: string | Error };
+
+  let appState = $state<AppState>({ state: 'idle' });
   let file = $state<File>();
-  let scanResult = $state<QrScanner.ScanResult>();
-  let errorMessage = $state('');
-  let isScanning = $state(false);
 
-  async function scanImage() {
+  $effect(() => {
+    if (file) appState = { state: 'loaded' };
+  });
+
+  function scanImage() {
     if (!file) {
       console.error('No files selected');
       return;
     }
 
-    isScanning = true;
-    QrScanner.scanImage(file, {
-      returnDetailedScanResult: true,
-    })
-      .then((res) => {
-        scanResult = res;
-        isScanning = false;
-        console.log('Scan result:', res.cornerPoints);
+    appState = { state: 'scanning' };
+
+    QrScanner.scanImage(file, { returnDetailedScanResult: true })
+      .then((result) => {
+        appState = { state: 'completed', result };
       })
       .catch((error) => {
-        errorMessage = (
-          typeof error === 'string' ? error : error.message
-        ) as string;
-        isScanning = false;
-        console.error('Error scanning image:', error);
+        console.error('Error', error);
+        appState = { state: 'error', error };
       });
   }
 
   function clear() {
     file = undefined;
-    scanResult = undefined;
-    errorMessage = '';
+    appState = { state: 'idle' };
   }
 
-  async function copyToClipboard(varlue: string | undefined) {
-    if (!varlue) {
-      return;
-    }
-    await navigator.clipboard.writeText(varlue);
-  }
-
-  function isURL(value: string | undefined): boolean {
-    if (!value) {
-      return false;
-    }
-    try {
-      const url = new URL(value);
-      return ['http:', 'https:'].includes(url.protocol);
-    } catch (error) {
-      return false;
+  function handleOpenUrlClick() {
+    if (appState.state === 'completed') {
+      browser.tabs.create({
+        url: appState.result.data,
+        active: true,
+      });
     }
   }
 
-  async function openUrl(url: string | undefined) {
-    if (!url) {
-      return;
+  function handleCopyClick() {
+    if (appState.state === 'completed') {
+      copyToClipboard(appState.result.data, 'text');
     }
-    await browser.tabs.create({
-      url,
-      active: true,
-    });
   }
 </script>
 
@@ -102,42 +91,46 @@
         </CardContent>
       </Card>
 
-      {#if scanResult}
-        <Textarea bind:value={() => scanResult?.data, (v) => {}} readonly />
-        <div class="flex justify-end gap-4">
-          <Button
-            disabled={!isURL(scanResult?.data)}
-            onclick={() => openUrl(scanResult?.data)}
-          >
-            <MdiLinkVariant />
-            {browser.i18n.getMessage('scan-from-image.open-url_button')}
-          </Button>
-          <Button
-            variant="outline"
-            onclick={() => copyToClipboard(scanResult?.data)}
-          >
-            <MdiContentCopy />
-            {browser.i18n.getMessage('scan-from-image.copy_button')}
-          </Button>
-        </div>
-      {:else if errorMessage}
-        <Alert variant="destructive">
-          <MdiAlertCircleOutline />
-          <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
-      {:else}
+      {#if appState.state === 'idle' || appState.state === 'loaded' || appState.state === 'scanning'}
         <Button
           onclick={scanImage}
-          disabled={!file || isScanning}
+          disabled={appState.state !== 'loaded'}
           class="w-full"
         >
-          {#if isScanning}
+          {#if appState.state === 'scanning'}
             <MdiLoading class="animate-spin" />
           {:else}
             <MdiQrcodeScan />
           {/if}
           {browser.i18n.getMessage('scan-from-image.scan_button')}
         </Button>
+      {:else if appState.state === 'completed'}
+        <Textarea
+          bind:value={
+            () =>
+              appState.state === 'completed' ? appState.result.data : undefined,
+            (v) => {}
+          }
+          readonly
+        />
+        <div class="flex justify-end gap-4">
+          <Button
+            disabled={!isBrowsableUrl(appState.result.data)}
+            onclick={handleOpenUrlClick}
+          >
+            <MdiLinkVariant />
+            {browser.i18n.getMessage('scan-from-image.open-url_button')}
+          </Button>
+          <Button variant="outline" onclick={handleCopyClick}>
+            <MdiContentCopy />
+            {browser.i18n.getMessage('scan-from-image.copy_button')}
+          </Button>
+        </div>
+      {:else if appState.state === 'error'}
+        <Alert variant="destructive">
+          <MdiAlertCircleOutline />
+          <AlertDescription>{appState.error}</AlertDescription>
+        </Alert>
       {/if}
     </div>
   </div>
