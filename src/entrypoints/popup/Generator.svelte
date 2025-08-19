@@ -84,7 +84,9 @@
 
   <Textarea
     bind:value={text}
-    placeholder={browser.i18n.getMessage('popup.generate.textarea-placeholder')}
+    placeholder={browser.i18n.getMessage(
+      'popup_generate__textarea_placeholder',
+    )}
     aria-label="QR Code Input"
   />
 
@@ -101,7 +103,7 @@
         onclick={handleCopyClick}
       >
         <MdiContentCopy />
-        {browser.i18n.getMessage('popup.generate.copy_button')}
+        {browser.i18n.getMessage('popup_generate__copy_button')}
       </Button>
       <Button
         variant="outline"
@@ -109,7 +111,7 @@
         onclick={handleDownloadClick}
       >
         <MdiTrayDownload />
-        {browser.i18n.getMessage('popup.generate.download_button')}
+        {browser.i18n.getMessage('popup_generate__download_button')}
       </Button>
     </div>
   {/if}

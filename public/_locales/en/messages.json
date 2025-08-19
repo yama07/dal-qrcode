@@ -5,55 +5,55 @@
   "extDescription": {
     "message": "Generate QR codes and scan them from images or your camera."
   },
-  "popup.generate_tab": {
+  "popup__generate_tab": {
     "message": "Generate"
   },
-  "popup.scan_tab": {
+  "popup__scan_tab": {
     "message": "Scan"
   },
-  "popup.generate.download_button": {
+  "popup_generate__download_button": {
     "message": "Download"
   },
-  "popup.generate.copy_button": {
+  "popup_generate__copy_button": {
     "message": "Copy"
   },
-  "popup.generate.textarea-placeholder": {
+  "popup_generate__textarea_placeholder": {
     "message": "Enter a URL or text here"
   },
-  "popup.scan.scan-from-image_button": {
+  "popup_scan__scanFromImage_button": {
     "message": "Scan from Image"
   },
-  "popup.scan.scan-with-camera_button": {
+  "popup_scan__scanWithCamera_button": {
     "message": "Scan with Came"
   },
-  "scan-from-image.dropzone_label": {
+  "scanFromImage__dropzone_label": {
     "message": "Drag your image file here, or click to select file."
   },
-  "scan-from-image.scan_button": {
+  "scanFromImage__scan_button": {
     "message": "Scan"
   },
-  "scan-from-image.open-url_button": {
+  "scanFromImage__openUrl_button": {
     "message": "Open URL"
   },
-  "scan-from-image.copy_button": {
+  "scanFromImage__copy_button": {
     "message": "Copy"
   },
-  "scan-with-camera.camera-select_label": {
+  "scanWithCamera__cameraSelect_label": {
     "message": "Camera"
   },
-  "scan-with-camera.start_button": {
+  "scanWithCamera__start_button": {
     "message": "Start"
   },
-  "scan-with-camera.stop_button": {
+  "scanWithCamera__stop_button": {
     "message": "Stop"
   },
-  "scan-with-camera.open-url_button": {
+  "scanWithCamera__openUrl_button": {
     "message": "Open URL"
   },
-  "scan-with-camera.copy_button": {
+  "scanWithCamera__copy_button": {
     "message": "Copy"
   },
-  "scan-with-camera.not-available-camera_error": {
+  "scanWithCamera__notAvailableCamera_error": {
     "message": "No available camera."
   }
 }

@@ -22,10 +22,10 @@
 <div class="grid gap-4">
   <Button onclick={openScanImage}>
     <MdiFileImageOutline />
-    {browser.i18n.getMessage('popup.scan.scan-from-image_button')}
+    {browser.i18n.getMessage('popup_scan__scanFromImage_button')}
   </Button>
   <Button onclick={openScanCamera}>
     <MdiCameraOutline />
-    {browser.i18n.getMessage('popup.scan.scan-with-camera_button')}
+    {browser.i18n.getMessage('popup_scan__scanWithCamera_button')}
   </Button>
 </div>

@@ -66,7 +66,7 @@
           appState = {
             state: 'error',
             error: browser.i18n.getMessage(
-              'scan-with-camera.not-available-camera_error',
+              'scanWithCamera__notAvailableCamera_error',
             ),
           };
         }
@@ -174,7 +174,7 @@
 
       <div class="w-full">
         <label for="camera-select" class="text-sm font-medium">
-          {browser.i18n.getMessage('scan-with-camera.camera-select_label')}
+          {browser.i18n.getMessage('scanWithCamera__cameraSelect_label')}
         </label>
         <Select
           type="single"
@@ -206,10 +206,10 @@
         >
           {#if appState.state === 'scanning'}
             <MdiStopCircleOutline />
-            {browser.i18n.getMessage('scan-with-camera.stop_button')}
+            {browser.i18n.getMessage('scanWithCamera__stop_button')}
           {:else}
             <MdiRecordCircleOutline />
-            {browser.i18n.getMessage('scan-with-camera.start_button')}
+            {browser.i18n.getMessage('scanWithCamera__start_button')}
           {/if}
         </Button>
       {:else if appState.state === 'completed'}
@@ -220,11 +220,11 @@
             onclick={handleOpenUrlClick}
           >
             <MdiLinkVariant />
-            {browser.i18n.getMessage('scan-with-camera.open-url_button')}
+            {browser.i18n.getMessage('scanWithCamera__openUrl_button')}
           </Button>
           <Button variant="outline" onclick={handleCopyClick}>
             <MdiContentCopy />
-            {browser.i18n.getMessage('scan-with-camera.copy_button')}
+            {browser.i18n.getMessage('scanWithCamera__copy_button')}
           </Button>
         </div>
       {:else if appState.state === 'error'}

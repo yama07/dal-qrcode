@@ -16,11 +16,11 @@
       <TabsList class="w-full">
         <TabsTrigger value="generate">
           <MdiQrcode />
-          {browser.i18n.getMessage('popup.generate_tab')}
+          {browser.i18n.getMessage('popup__generate_tab')}
         </TabsTrigger>
         <TabsTrigger value="scan">
           <MdiMagnifyScan />
-          {browser.i18n.getMessage('popup.scan_tab')}
+          {browser.i18n.getMessage('popup__scan_tab')}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="generate">

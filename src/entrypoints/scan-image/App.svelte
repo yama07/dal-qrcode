@@ -85,7 +85,7 @@
           {:else}
             <Dropzone
               bind:file
-              label={browser.i18n.getMessage('scan-from-image.dropzone_label')}
+              label={browser.i18n.getMessage('scanFromImage__dropzone_label')}
             />
           {/if}
         </CardContent>
@@ -102,7 +102,7 @@
           {:else}
             <MdiQrcodeScan />
           {/if}
-          {browser.i18n.getMessage('scan-from-image.scan_button')}
+          {browser.i18n.getMessage('scanFromImage__scan_button')}
         </Button>
       {:else if appState.state === 'completed'}
         <Textarea
@@ -119,11 +119,11 @@
             onclick={handleOpenUrlClick}
           >
             <MdiLinkVariant />
-            {browser.i18n.getMessage('scan-from-image.open-url_button')}
+            {browser.i18n.getMessage('scanFromImage__openUrl_button')}
           </Button>
           <Button variant="outline" onclick={handleCopyClick}>
             <MdiContentCopy />
-            {browser.i18n.getMessage('scan-from-image.copy_button')}
+            {browser.i18n.getMessage('scanFromImage__copy_button')}
           </Button>
         </div>
       {:else if appState.state === 'error'}
