@@ -96,18 +96,20 @@
   {:else}
     <div class="flex justify-end gap-4">
       <Button
-        disabled={appState.state !== 'completed'}
-        onclick={handleDownloadClick}
-      >
-        <MdiTrayDownload />
-        {browser.i18n.getMessage('popup.generate.download_button')}
-      </Button>
-      <Button
+        variant="outline"
         disabled={appState.state !== 'completed'}
         onclick={handleCopyClick}
       >
         <MdiContentCopy />
         {browser.i18n.getMessage('popup.generate.copy_button')}
+      </Button>
+      <Button
+        variant="outline"
+        disabled={appState.state !== 'completed'}
+        onclick={handleDownloadClick}
+      >
+        <MdiTrayDownload />
+        {browser.i18n.getMessage('popup.generate.download_button')}
       </Button>
     </div>
   {/if}
