@@ -24,7 +24,10 @@
     "message": "Scan from Image"
   },
   "popup_scan__scanWithCamera_button": {
-    "message": "Scan with Came"
+    "message": "Scan with Camera"
+  },
+  "scanFromImage__title": {
+    "message": "Dal QRcode | Scan from Image"
   },
   "scanFromImage__dropzone_label": {
     "message": "Drag your image file here, or click to select file."
@@ -37,6 +40,9 @@
   },
   "scanFromImage__copy_button": {
     "message": "Copy"
+  },
+  "scanWithCamera__title": {
+    "message": "Dal QRcode | Scan with Camera"
   },
   "scanWithCamera__cameraSelect_label": {
     "message": "Camera"

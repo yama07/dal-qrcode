@@ -26,6 +26,9 @@
   "popup_scan__scanWithCamera_button": {
     "message": "カメラで読み取る"
   },
+  "scanFromImage__title": {
+    "message": "Dal QRcode | 画像から読み取る"
+  },
   "scanFromImage__dropzone_label": {
     "message": "画像ファイルをここにドロップするか、ファイルを選択します。"
   },
@@ -37,6 +40,9 @@
   },
   "scanFromImage__copy_button": {
     "message": "コピー"
+  },
+  "scanWithCamera__title": {
+    "message": "Dal QRcode | カメラで読み取る"
   },
   "scanWithCamera__cameraSelect_label": {
     "message": "カメラ"

@@ -137,6 +137,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{browser.i18n.getMessage('scanWithCamera__title')}</title>
+</svelte:head>
+
 <main>
   <div
     class="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10"
