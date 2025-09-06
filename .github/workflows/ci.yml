@@ -63,6 +63,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npm run e2e:install-browser
 
+      - name: Install Japanese packages
+        run: |
+          sudo apt-get install -y fonts-noto-cjk
+          sudo locale-gen ja_JP.UTF-8
+
       - name: Run Playwright tests
         run: xvfb-run npm run e2e
 

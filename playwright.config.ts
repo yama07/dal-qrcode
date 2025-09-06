@@ -7,6 +7,8 @@ export default defineConfig({
 
   retries: process.env.CI ? 2 : 0,
 
+  timeout: 10_000,
+
   // クリップボードを利用したテストで競合が発生する可能性があるため、
   // 1つのワーカーで直列実行する。
   fullyParallel: false,
