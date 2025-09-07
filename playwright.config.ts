@@ -22,19 +22,9 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'chromium_ja-JP',
+      name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        locale: 'ja-JP',
-        timezoneId: 'Asia/Tokyo',
-      },
-    },
-    {
-      name: 'chromium_en-US',
-      use: {
-        ...devices['Desktop Chrome'],
-        locale: 'en-US',
-        timezoneId: 'America/New_York',
       },
     },
   ],

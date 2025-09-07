@@ -1,26 +1,33 @@
 import { test, expect } from './fixtures';
 import { openPopup } from './pages/popup';
-import { getMessage } from './utils/i18n';
 
 test.describe('生成', () => {
   test('初期状態は、テキストエリアにアクティブタブのURLがセットされている', async ({
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickGenerateTab();
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__generate_tab') })
+      .click();
 
     expect(await page.getByRole('textbox').inputValue()).toEqual(page.url());
   });
 
   test('テキストエリアを入力するとQRコードが生成される', async ({
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickGenerateTab();
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__generate_tab') })
+      .click();
 
     await page.getByRole('textbox').fill('foo');
     const fooQRSrc = await page
@@ -39,19 +46,23 @@ test.describe('生成', () => {
   test('コピーボタンをクリックすると、クリップボードにQRコードの画像がコピーされる', async ({
     context,
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
     test.skip(true, 'クリップボードの読み取りがうまくいかないためスキップ');
 
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
     await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickGenerateTab();
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__generate_tab') })
+      .click();
 
     await page
       .getByRole('button', {
-        name: getMessage('popup_generate__copy_button', locale),
+        name: getMessage('popup_generate__copy_button'),
       })
       .click();
 
@@ -65,17 +76,21 @@ test.describe('生成', () => {
 
   test('ダウンロードボタンをクリックすると、QRコードの画像をダウンロードする', async ({
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickGenerateTab();
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__generate_tab') })
+      .click();
 
     const downloadPromise = page.waitForEvent('download');
 
     await page
       .getByRole('button', {
-        name: getMessage('popup_generate__download_button', locale),
+        name: getMessage('popup_generate__download_button'),
       })
       .click();
 
@@ -88,13 +103,17 @@ test.describe('生成', () => {
   test('オフラインでQRコードを生成することができる', async ({
     context,
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
     context.setOffline(true);
 
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickGenerateTab();
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__generate_tab') })
+      .click();
 
     const initQRSrc = await page
       .getByRole('img', { name: 'QR Code' })
@@ -114,48 +133,52 @@ test.describe('読み取り', () => {
   test('画像から読み取るボタンをクリックすると、読み取り用のタブを開く', async ({
     context,
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickScanTab();
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__scan_tab') })
+      .click();
 
     const [scanFromImagePage] = await Promise.all([
       context.waitForEvent('page'),
       page
         .getByRole('button', {
-          name: getMessage('popup_scan__scanFromImage_button', locale),
+          name: getMessage('popup_scan__scanFromImage_button'),
         })
         .click(),
     ]);
     await scanFromImagePage.waitForLoadState();
     const scanFromImagePageTitle = await scanFromImagePage.title();
-    expect(scanFromImagePageTitle).toEqual(
-      getMessage('scanFromImage__title', locale),
-    );
+    expect(scanFromImagePageTitle).toEqual(getMessage('scanFromImage__title'));
   });
 
   test('カメラで読み取るボタンをクリックすると、読み取り用のタブを開く', async ({
     context,
     page,
-    locale,
-    extensionId,
+    dalQrcodeExtension,
   }) => {
-    const popup = await openPopup(page, extensionId, locale);
-    await popup.clickScanTab();
+    const { extensionId, getMessage } = dalQrcodeExtension;
+
+    await openPopup(page, extensionId);
+
+    await page
+      .getByRole('tab', { name: getMessage('popup__scan_tab') })
+      .click();
 
     const [scanFromImagePage] = await Promise.all([
       context.waitForEvent('page'),
       page
         .getByRole('button', {
-          name: getMessage('popup_scan__scanWithCamera_button', locale),
+          name: getMessage('popup_scan__scanWithCamera_button'),
         })
         .click(),
     ]);
     await scanFromImagePage.waitForLoadState();
     const scanFromImagePageTitle = await scanFromImagePage.title();
-    expect(scanFromImagePageTitle).toEqual(
-      getMessage('scanWithCamera__title', locale),
-    );
+    expect(scanFromImagePageTitle).toEqual(getMessage('scanWithCamera__title'));
   });
 });

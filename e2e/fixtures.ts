@@ -1,6 +1,7 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'node:path';
 import { getAssetPath } from './utils/assets';
+import { getMessage as _getMessage } from './utils/i18n';
 
 const pathToExtension = path.resolve('.output/chrome-mv3');
 
@@ -40,7 +41,10 @@ export const test = base.extend<{
   contextWithFakeVideQrcodeTextDalmatian: BrowserContext;
   contextWithFakeVideQrcodeUrlHttp: BrowserContext;
   contextWithFakeVideQrcodeUrlHttps: BrowserContext;
-  extensionId: string;
+  dalQrcodeExtension: {
+    extensionId: string;
+    getMessage: (key: Parameters<typeof _getMessage>[0]) => string;
+  };
 }>({
   context: createCustomContext(),
 
@@ -56,20 +60,46 @@ export const test = base.extend<{
     getAssetPath('qrcode-url-https.y4m'),
   ),
 
-  extensionId: async ({ context }, use) => {
+  dalQrcodeExtension: async ({ context }, use) => {
     const page = await context.newPage();
     await page.goto('chrome://extensions/');
     await page.click('cr-toggle#devMode');
 
-    const extensionCard = page.locator('extensions-item').first();
-    const extensionId = await extensionCard.getAttribute('id');
+    const extensionCards = await page.locator('extensions-item').all();
+    const extensionInfos = await Promise.all(
+      extensionCards.map(async (card) => {
+        const id = await card.getAttribute('id');
+        const name = (await card.locator('#name').textContent())?.trim();
+        const description = (
+          await card.locator('#description').textContent()
+        )?.trim();
+        return { id, name, description };
+      }),
+    );
+
+    const dalQrcodeInfo = extensionInfos
+      .filter(
+        (info) =>
+          info.name === _getMessage('extName', 'ja-JP') ||
+          info.name === _getMessage('extName', 'en-US'),
+      )
+      .pop();
+
+    if (!dalQrcodeInfo) {
+      throw new Error('The Dal QRcode extension was not found.');
+    }
+
+    const lang =
+      dalQrcodeInfo.description === _getMessage('extDescription', 'ja-JP')
+        ? 'ja-JP'
+        : 'en-US';
+
+    const getMessage = (key: Parameters<typeof _getMessage>[0]) =>
+      _getMessage(key, lang);
 
     await page.close();
 
-    if (!extensionId) {
-      throw new Error('The extension ID could not be identified.');
-    }
-    await use(extensionId);
+    await use({ extensionId: dalQrcodeInfo.id!!, getMessage });
   },
 });
 

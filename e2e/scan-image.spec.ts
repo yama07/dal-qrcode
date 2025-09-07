@@ -1,15 +1,15 @@
 import { test, expect } from './fixtures';
 import { openScanImagePage } from './pages/scan-image';
-import { getMessage } from './utils/i18n';
 import { dragAndDrop } from './utils/drag-and-drop';
 import { getAssetPath } from './utils/assets';
 
 test('画像を選択して、テキストのQRコードを読み取ることができる', async ({
   context,
   page,
-  locale,
-  extensionId,
+  dalQrcodeExtension,
 }) => {
+  const { extensionId, getMessage } = dalQrcodeExtension;
+
   await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
   await openScanImagePage(page, extensionId);
@@ -19,9 +19,7 @@ test('画像を選択して、テキストのQRコードを読み取ることが
     .setInputFiles(getAssetPath('qrcode-text-Dalmatian.png'));
 
   await page
-    .getByRole('button', {
-      name: getMessage('scanFromImage__scan_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
     .click();
 
   // テキストとして読み取ることができていること
@@ -32,16 +30,14 @@ test('画像を選択して、テキストのQRコードを読み取ることが
   expect(
     page
       .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button', locale),
+        name: getMessage('scanWithCamera__openUrl_button'),
       })
       .isDisabled(),
   ).toBeTruthy();
 
   // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
   await page
-    .getByRole('button', {
-      name: getMessage('scanWithCamera__copy_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
     .click();
   const clipboardText = await page.evaluate(async () => {
     return await navigator.clipboard.readText();
@@ -52,9 +48,10 @@ test('画像を選択して、テキストのQRコードを読み取ることが
 test('画像を選択して、httpのURLのQRコードを読み取ることができる', async ({
   context,
   page,
-  locale,
-  extensionId,
+  dalQrcodeExtension,
 }) => {
+  const { extensionId, getMessage } = dalQrcodeExtension;
+
   await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
   await openScanImagePage(page, extensionId);
@@ -64,9 +61,7 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
     .setInputFiles(getAssetPath('qrcode-url-http.png'));
 
   await page
-    .getByRole('button', {
-      name: getMessage('scanFromImage__scan_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
     .click();
 
   // テキストとして読み取ることができていること
@@ -77,7 +72,7 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
   expect(
     page
       .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button', locale),
+        name: getMessage('scanWithCamera__openUrl_button'),
       })
       .isEnabled(),
   ).toBeTruthy();
@@ -87,7 +82,7 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
     context.waitForEvent('page'),
     page
       .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button', locale),
+        name: getMessage('scanWithCamera__openUrl_button'),
       })
       .click(),
   ]);
@@ -96,9 +91,7 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
 
   // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
   await page
-    .getByRole('button', {
-      name: getMessage('scanWithCamera__copy_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
     .click();
   const clipboardText = await page.evaluate(async () => {
     return await navigator.clipboard.readText();
@@ -109,9 +102,10 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
 test('画像を選択して、httpsのURLのQRコードを読み取ることができる', async ({
   context,
   page,
-  locale,
-  extensionId,
+  dalQrcodeExtension,
 }) => {
+  const { extensionId, getMessage } = dalQrcodeExtension;
+
   await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
   await openScanImagePage(page, extensionId);
@@ -121,9 +115,7 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
     .setInputFiles(getAssetPath('qrcode-url-https.png'));
 
   await page
-    .getByRole('button', {
-      name: getMessage('scanFromImage__scan_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
     .click();
 
   // テキストとして読み取ることができていること
@@ -134,7 +126,7 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
   expect(
     page
       .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button', locale),
+        name: getMessage('scanWithCamera__openUrl_button'),
       })
       .isEnabled(),
   ).toBeTruthy();
@@ -144,7 +136,7 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
     context.waitForEvent('page'),
     page
       .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button', locale),
+        name: getMessage('scanWithCamera__openUrl_button'),
       })
       .click(),
   ]);
@@ -153,9 +145,7 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
 
   // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
   await page
-    .getByRole('button', {
-      name: getMessage('scanWithCamera__copy_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
     .click();
   const clipboardText = await page.evaluate(async () => {
     return await navigator.clipboard.readText();
@@ -165,23 +155,22 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
 
 test('画像をドラッグ&ドロップを選択して、テキストのQRコードを読み取ることができる', async ({
   page,
-  locale,
-  extensionId,
+  dalQrcodeExtension,
 }) => {
+  const { extensionId, getMessage } = dalQrcodeExtension;
+
   await openScanImagePage(page, extensionId);
 
   await dragAndDrop(
     page,
-    page.getByLabel(getMessage('scanFromImage__dropzone_label', locale)),
+    page.getByLabel(getMessage('scanFromImage__dropzone_label')),
     getAssetPath('qrcode-text-Dalmatian.png'),
     'qrcode-text-Dalmatian.png',
     'image/png',
   );
 
   await page
-    .getByRole('button', {
-      name: getMessage('scanFromImage__scan_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
     .click();
 
   const result = await page.getByRole('textbox').inputValue();
@@ -191,9 +180,10 @@ test('画像をドラッグ&ドロップを選択して、テキストのQRコ�
 test('オフラインでQRコードを読み取ることができる', async ({
   context,
   page,
-  locale,
-  extensionId,
+  dalQrcodeExtension,
 }) => {
+  const { extensionId, getMessage } = dalQrcodeExtension;
+
   await context.setOffline(true);
 
   await openScanImagePage(page, extensionId);
@@ -203,9 +193,7 @@ test('オフラインでQRコードを読み取ることができる', async ({
     .setInputFiles(getAssetPath('qrcode-text-Dalmatian.png'));
 
   await page
-    .getByRole('button', {
-      name: getMessage('scanFromImage__scan_button', locale),
-    })
+    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
     .click();
 
   const result = await page.getByRole('textbox').inputValue();
