@@ -17,7 +17,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    trace: 'on-first-retry',
+    trace: process.env.CI ? 'on' : 'on-first-retry',
   },
 
   projects: [
