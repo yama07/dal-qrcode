@@ -123,10 +123,13 @@
 
   function handleOpenUrlClick() {
     if (appState.state === 'completed') {
-      browser.tabs.create({
-        url: appState.result.data,
-        active: true,
-      });
+      browser.tabs.create(
+        {
+          url: appState.result.data,
+          active: true,
+        },
+        () => window.close(),
+      );
     }
   }
 

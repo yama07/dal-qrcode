@@ -5,17 +5,23 @@
   import Button from '$lib/components/ui/button/button.svelte';
 
   async function openScanImage() {
-    await browser.tabs.create({
-      url: browser.runtime.getURL('/scan-image.html'),
-      active: true,
-    });
+    browser.tabs.create(
+      {
+        url: browser.runtime.getURL('/scan-image.html'),
+        active: true,
+      },
+      () => window.close(),
+    );
   }
 
   async function openScanCamera() {
-    await browser.tabs.create({
-      url: browser.runtime.getURL('/scan-camera.html'),
-      active: true,
-    });
+    browser.tabs.create(
+      {
+        url: browser.runtime.getURL('/scan-camera.html'),
+        active: true,
+      },
+      () => window.close(),
+    );
   }
 </script>
 
