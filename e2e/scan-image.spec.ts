@@ -77,6 +77,15 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
       .isEnabled(),
   ).toBeTruthy();
 
+  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
+  await page
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
+    .click();
+  const clipboardText = await page.evaluate(async () => {
+    return await navigator.clipboard.readText();
+  });
+  expect(clipboardText).toEqual('http://example.com/');
+
   // URLを開くボタンをクリックすると、読み取ったURLを別タブで開く
   const [newPage] = await Promise.all([
     context.waitForEvent('page'),
@@ -88,15 +97,6 @@ test('画像を選択して、httpのURLのQRコードを読み取ることが�
   ]);
   await newPage.waitForLoadState();
   expect(newPage.url()).toEqual('http://example.com/');
-
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
-  });
-  expect(clipboardText).toEqual('http://example.com/');
 });
 
 test('画像を選択して、httpsのURLのQRコードを読み取ることができる', async ({
@@ -131,6 +131,15 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
       .isEnabled(),
   ).toBeTruthy();
 
+  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
+  await page
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
+    .click();
+  const clipboardText = await page.evaluate(async () => {
+    return await navigator.clipboard.readText();
+  });
+  expect(clipboardText).toEqual('https://example.com/');
+
   // URLを開くボタンをクリックすると、読み取ったURLを別タブで開く
   const [newPage] = await Promise.all([
     context.waitForEvent('page'),
@@ -142,15 +151,6 @@ test('画像を選択して、httpsのURLのQRコードを読み取ることが�
   ]);
   await newPage.waitForLoadState();
   expect(newPage.url()).toEqual('https://example.com/');
-
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
-  });
-  expect(clipboardText).toEqual('https://example.com/');
 });
 
 test('画像をドラッグ&ドロップを選択して、テキストのQRコードを読み取ることができる', async ({

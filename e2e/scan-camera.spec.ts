@@ -77,6 +77,15 @@ test('httpのURLのQRコードを読み取ることができる', async ({
       .isEnabled(),
   ).toBeTruthy();
 
+  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
+  await page
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
+    .click();
+  const clipboardText = await page.evaluate(async () => {
+    return await navigator.clipboard.readText();
+  });
+  expect(clipboardText).toEqual('http://example.com/');
+
   // URLを開くボタンをクリックすると、読み取ったURLを別タブで開く
   const [newPage] = await Promise.all([
     contextWithFakeVideQrcodeUrlHttp.waitForEvent('page'),
@@ -88,15 +97,6 @@ test('httpのURLのQRコードを読み取ることができる', async ({
   ]);
   await newPage.waitForLoadState();
   expect(newPage.url()).toEqual('http://example.com/');
-
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
-  });
-  expect(clipboardText).toEqual('http://example.com/');
 });
 
 test('httpsのURLのQRコードを読み取ることができる', async ({
@@ -132,6 +132,15 @@ test('httpsのURLのQRコードを読み取ることができる', async ({
       .isEnabled(),
   ).toBeTruthy();
 
+  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
+  await page
+    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
+    .click();
+  const clipboardText = await page.evaluate(async () => {
+    return await navigator.clipboard.readText();
+  });
+  expect(clipboardText).toEqual('https://example.com/');
+
   // URLを開くボタンをクリックすると、読み取ったURLを別タブで開く
   const [newPage] = await Promise.all([
     contextWithFakeVideQrcodeUrlHttps.waitForEvent('page'),
@@ -143,15 +152,6 @@ test('httpsのURLのQRコードを読み取ることができる', async ({
   ]);
   await newPage.waitForLoadState();
   expect(newPage.url()).toEqual('https://example.com/');
-
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
-  });
-  expect(clipboardText).toEqual('https://example.com/');
 });
 
 test('オフラインでQRコードを読み取ることができる', async ({
