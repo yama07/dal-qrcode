@@ -1,201 +1,126 @@
 import { test, expect } from './fixtures';
-import { openScanImagePage } from './pages/scan-image';
-import { dragAndDrop } from './utils/drag-and-drop';
 import { getAssetPath } from './utils/assets';
+import { ScanImagePage } from './pages/scan-image-page';
+import { createExtensionTestContext } from './utils/context-fixture';
 
-test('画像を選択して、テキストのQRコードを読み取ることができる', async ({
-  context,
-  page,
-  dalQrcodeExtension,
-}) => {
-  const { extensionId, getMessage } = dalQrcodeExtension;
-
-  await context.grantPermissions(['clipboard-write', 'clipboard-read']);
-
-  await openScanImagePage(page, extensionId);
-
-  await page
-    .locator('input[type="file"]')
-    .setInputFiles(getAssetPath('qrcode-text-Dalmatian.png'));
-
-  await page
-    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
-    .click();
-
-  // テキストとして読み取ることができていること
-  const result = await page.getByRole('textbox').inputValue();
-  expect(result).toEqual('Dalmatian');
-
-  // URLを開くボタンが無効になっていること
-  expect(
-    page
-      .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button'),
-      })
-      .isDisabled(),
-  ).toBeTruthy();
-
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
-  });
-  expect(clipboardText).toEqual('Dalmatian');
+test.use({
+  context: createExtensionTestContext(),
 });
 
-test('画像を選択して、httpのURLのQRコードを読み取ることができる', async ({
-  context,
-  page,
-  dalQrcodeExtension,
-}) => {
-  const { extensionId, getMessage } = dalQrcodeExtension;
+test.describe('画像を選択して、テキストのQRコードを読み取ることができる', () => {
+  let scanImagePage: ScanImagePage;
 
-  await context.grantPermissions(['clipboard-write', 'clipboard-read']);
+  test.beforeEach(
+    '画像を選択して読み取りをおこなう',
+    async ({ context, page, dalQrcodeExtension }) => {
+      await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
-  await openScanImagePage(page, extensionId);
+      scanImagePage = new ScanImagePage(page, dalQrcodeExtension);
 
-  await page
-    .locator('input[type="file"]')
-    .setInputFiles(getAssetPath('qrcode-url-http.png'));
+      await scanImagePage.goto();
 
-  await page
-    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
-    .click();
+      await scanImagePage.setImageFile(
+        getAssetPath('qrcode-text-Dalmatian.png'),
+      );
 
-  // テキストとして読み取ることができていること
-  const result = await page.getByRole('textbox').inputValue();
-  expect(result).toEqual('http://example.com/');
+      await scanImagePage.getScanButton().click();
+    },
+  );
 
-  // URLを開くボタンが有効になっていること
-  expect(
-    page
-      .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button'),
-      })
-      .isEnabled(),
-  ).toBeTruthy();
+  test('テキストとして読み取ることができていること', async () => {
+    const result = await scanImagePage.getResultTextarea().inputValue();
 
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
+    expect(result).toEqual('Dalmatian');
   });
-  expect(clipboardText).toEqual('http://example.com/');
 
-  // URLを開くボタンをクリックすると、読み取ったURLを別タブで開く
-  const [newPage] = await Promise.all([
-    context.waitForEvent('page'),
-    page
-      .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button'),
-      })
-      .click(),
-  ]);
-  await newPage.waitForLoadState();
-  expect(newPage.url()).toEqual('http://example.com/');
+  test('URLを開くボタンが無効になっていること', async () => {
+    expect(await scanImagePage.getOpenUrlButton().isDisabled()).toBeTruthy();
+  });
+
+  test('コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること', async () => {
+    await scanImagePage.getCopyButton().click();
+    const clipboardText = await scanImagePage.page.evaluate(async () => {
+      return await navigator.clipboard.readText();
+    });
+
+    expect(clipboardText).toEqual('Dalmatian');
+  });
 });
 
-test('画像を選択して、httpsのURLのQRコードを読み取ることができる', async ({
-  context,
-  page,
-  dalQrcodeExtension,
-}) => {
-  const { extensionId, getMessage } = dalQrcodeExtension;
+[
+  {
+    scheme: 'http',
+    imagePath: getAssetPath('qrcode-url-http.png'),
+    resultText: 'http://example.com/',
+  },
+  {
+    scheme: 'https',
+    imagePath: getAssetPath('qrcode-url-https.png'),
+    resultText: 'https://example.com/',
+  },
+].forEach(({ scheme, imagePath, resultText }) => {
+  test.describe(`画像を選択して、${scheme}のURLのQRコードを読み取ることができる`, () => {
+    let scanImagePage: ScanImagePage;
 
-  await context.grantPermissions(['clipboard-write', 'clipboard-read']);
+    test.beforeEach(
+      '画像を選択して読み取りをおこなう',
+      async ({ context, page, dalQrcodeExtension }) => {
+        await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
-  await openScanImagePage(page, extensionId);
+        scanImagePage = new ScanImagePage(page, dalQrcodeExtension);
 
-  await page
-    .locator('input[type="file"]')
-    .setInputFiles(getAssetPath('qrcode-url-https.png'));
+        await scanImagePage.goto();
 
-  await page
-    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
-    .click();
+        await scanImagePage.setImageFile(imagePath);
 
-  // テキストとして読み取ることができていること
-  const result = await page.getByRole('textbox').inputValue();
-  expect(result).toEqual('https://example.com/');
+        await scanImagePage.getScanButton().click();
+      },
+    );
 
-  // URLを開くボタンが有効になっていること
-  expect(
-    page
-      .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button'),
-      })
-      .isEnabled(),
-  ).toBeTruthy();
+    test('テキストとして読み取ることができていること', async () => {
+      const result = await scanImagePage.getResultTextarea().inputValue();
 
-  // コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること
-  await page
-    .getByRole('button', { name: getMessage('scanWithCamera__copy_button') })
-    .click();
-  const clipboardText = await page.evaluate(async () => {
-    return await navigator.clipboard.readText();
+      expect(result).toEqual(resultText);
+    });
+
+    test('URLを開くボタンが有効になっていること', async () => {
+      expect(await scanImagePage.getOpenUrlButton().isEnabled()).toBeTruthy();
+    });
+
+    test('URLを開くボタンをクリックすると、読み取ったURLを別タブで開く', async () => {
+      const [newPage] = await Promise.all([
+        scanImagePage.page.context().waitForEvent('page'),
+        scanImagePage.getOpenUrlButton().click(),
+      ]);
+      await newPage.waitForLoadState();
+
+      expect(newPage.url()).toEqual(resultText);
+    });
+
+    test('コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること', async () => {
+      await scanImagePage.getCopyButton().click();
+      const clipboardText = await scanImagePage.page.evaluate(async () => {
+        return await navigator.clipboard.readText();
+      });
+
+      expect(clipboardText).toEqual(resultText);
+    });
   });
-  expect(clipboardText).toEqual('https://example.com/');
-
-  // URLを開くボタンをクリックすると、読み取ったURLを別タブで開く
-  const [newPage] = await Promise.all([
-    context.waitForEvent('page'),
-    page
-      .getByRole('button', {
-        name: getMessage('scanWithCamera__openUrl_button'),
-      })
-      .click(),
-  ]);
-  await newPage.waitForLoadState();
-  expect(newPage.url()).toEqual('https://example.com/');
 });
 
 test('画像をドラッグ&ドロップを選択して、テキストのQRコードを読み取ることができる', async ({
   page,
   dalQrcodeExtension,
 }) => {
-  const { extensionId, getMessage } = dalQrcodeExtension;
+  const scanImagePage = new ScanImagePage(page, dalQrcodeExtension);
 
-  await openScanImagePage(page, extensionId);
-
-  await dragAndDrop(
-    page,
-    page.getByLabel(getMessage('scanFromImage__dropzone_label')),
+  await scanImagePage.goto();
+  await scanImagePage.setImageFileWithDragAndDrop(
     getAssetPath('qrcode-text-Dalmatian.png'),
-    'qrcode-text-Dalmatian.png',
-    'image/png',
   );
+  await scanImagePage.getScanButton().click();
 
-  await page
-    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
-    .click();
+  const result = await scanImagePage.getResultTextarea().inputValue();
 
-  const result = await page.getByRole('textbox').inputValue();
-  expect(result).toEqual('Dalmatian');
-});
-
-test('オフラインでQRコードを読み取ることができる', async ({
-  context,
-  page,
-  dalQrcodeExtension,
-}) => {
-  const { extensionId, getMessage } = dalQrcodeExtension;
-
-  await context.setOffline(true);
-
-  await openScanImagePage(page, extensionId);
-
-  await page
-    .locator('input[type="file"]')
-    .setInputFiles(getAssetPath('qrcode-text-Dalmatian.png'));
-
-  await page
-    .getByRole('button', { name: getMessage('scanFromImage__scan_button') })
-    .click();
-
-  const result = await page.getByRole('textbox').inputValue();
   expect(result).toEqual('Dalmatian');
 });

@@ -18,6 +18,7 @@ export default defineConfig({
 
   use: {
     trace: process.env.CI ? 'on' : 'on-first-retry',
+    offline: true,
   },
 
   projects: [

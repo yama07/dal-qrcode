@@ -1,43 +1,33 @@
 import { test, expect } from './fixtures';
-import { openPopup } from './pages/popup';
+import { PopupPage } from './pages/popup-page';
+import { ScanCameraPage } from './pages/scan-camera-page';
+import { ScanImagePage } from './pages/scan-image-page';
+import { createExtensionTestContext } from './utils/context-fixture';
+
+test.use({ context: createExtensionTestContext() });
 
 test.describe('生成', () => {
-  test('初期状態は、テキストエリアにアクティブタブのURLがセットされている', async ({
-    page,
-    dalQrcodeExtension,
-  }) => {
-    const { extensionId, getMessage } = dalQrcodeExtension;
+  let popupPage: PopupPage;
 
-    await openPopup(page, extensionId);
+  test.beforeEach('生成タブを開く', async ({ page, dalQrcodeExtension }) => {
+    popupPage = new PopupPage(page, dalQrcodeExtension);
 
-    await page
-      .getByRole('tab', { name: getMessage('popup__generate_tab') })
-      .click();
-
-    expect(await page.getByRole('textbox').inputValue()).toEqual(page.url());
+    await popupPage.goto();
+    await popupPage.selectGenerateTab();
   });
 
-  test('テキストエリアを入力するとQRコードが生成される', async ({
-    page,
-    dalQrcodeExtension,
-  }) => {
-    const { extensionId, getMessage } = dalQrcodeExtension;
+  test('初期状態は、テキストエリアにアクティブタブのURLがセットされている', async () => {
+    expect(await popupPage.getInputTextarea().inputValue()).toEqual(
+      popupPage.page.url(),
+    );
+  });
 
-    await openPopup(page, extensionId);
+  test('テキストエリアを入力するとQRコードが生成される', async () => {
+    await popupPage.getInputTextarea().fill('foo');
+    const fooQRSrc = await popupPage.getQrcodeImage().getAttribute('src');
 
-    await page
-      .getByRole('tab', { name: getMessage('popup__generate_tab') })
-      .click();
-
-    await page.getByRole('textbox').fill('foo');
-    const fooQRSrc = await page
-      .getByRole('img', { name: 'QR Code' })
-      .getAttribute('src');
-
-    await page.getByRole('textbox').fill('bar');
-    const barQRSrc = await page
-      .getByRole('img', { name: 'QR Code' })
-      .getAttribute('src');
+    await popupPage.getInputTextarea().fill('bar');
+    const barQRSrc = await popupPage.getQrcodeImage().getAttribute('src');
 
     // 異なるQRコードが生成されていること
     expect(fooQRSrc).not.toBe(barQRSrc);
@@ -45,28 +35,14 @@ test.describe('生成', () => {
 
   test('コピーボタンをクリックすると、クリップボードにQRコードの画像がコピーされる', async ({
     context,
-    page,
-    dalQrcodeExtension,
   }) => {
     test.skip(true, 'クリップボードの読み取りがうまくいかないためスキップ');
 
-    const { extensionId, getMessage } = dalQrcodeExtension;
-
     await context.grantPermissions(['clipboard-write', 'clipboard-read']);
 
-    await openPopup(page, extensionId);
+    await popupPage.getCopyButton().click();
 
-    await page
-      .getByRole('tab', { name: getMessage('popup__generate_tab') })
-      .click();
-
-    await page
-      .getByRole('button', {
-        name: getMessage('popup_generate__copy_button'),
-      })
-      .click();
-
-    const clipboardItems = await page.evaluate(async () => {
+    const clipboardItems = await popupPage.page.evaluate(async () => {
       return await navigator.clipboard.read();
     });
 
@@ -74,111 +50,56 @@ test.describe('生成', () => {
     expect(clipboardItems[0].types.includes('image/png')).toBeTruthy();
   });
 
-  test('ダウンロードボタンをクリックすると、QRコードの画像をダウンロードする', async ({
-    page,
-    dalQrcodeExtension,
-  }) => {
-    const { extensionId, getMessage } = dalQrcodeExtension;
+  test('ダウンロードボタンをクリックすると、QRコードの画像をダウンロードする', async () => {
+    const downloadPromise = popupPage.page.waitForEvent('download');
 
-    await openPopup(page, extensionId);
-
-    await page
-      .getByRole('tab', { name: getMessage('popup__generate_tab') })
-      .click();
-
-    const downloadPromise = page.waitForEvent('download');
-
-    await page
-      .getByRole('button', {
-        name: getMessage('popup_generate__download_button'),
-      })
-      .click();
+    await popupPage.getDownloadButton().click();
 
     const download = await downloadPromise;
 
     const fileName = download.suggestedFilename();
     expect(fileName).toEqual('Dal-QRcode.png');
   });
-
-  test('オフラインでQRコードを生成することができる', async ({
-    context,
-    page,
-    dalQrcodeExtension,
-  }) => {
-    context.setOffline(true);
-
-    const { extensionId, getMessage } = dalQrcodeExtension;
-
-    await openPopup(page, extensionId);
-
-    await page
-      .getByRole('tab', { name: getMessage('popup__generate_tab') })
-      .click();
-
-    const initQRSrc = await page
-      .getByRole('img', { name: 'QR Code' })
-      .getAttribute('src');
-
-    await page.getByRole('textbox').fill('Dalmatian');
-    const newQRSrc = await page
-      .getByRole('img', { name: 'QR Code' })
-      .getAttribute('src');
-
-    // 別々のQRコードが生成されていること
-    expect(initQRSrc).not.toBe(newQRSrc);
-  });
 });
 
 test.describe('読み取り', () => {
+  let popupPage: PopupPage;
+
+  test.beforeEach(
+    '読み取りタブを開く',
+    async ({ page, dalQrcodeExtension }) => {
+      popupPage = new PopupPage(page, dalQrcodeExtension);
+
+      await popupPage.goto();
+      await popupPage.selectScanTab();
+    },
+  );
+
   test('画像から読み取るボタンをクリックすると、読み取り用のタブを開く', async ({
-    context,
     page,
-    dalQrcodeExtension,
   }) => {
-    const { extensionId, getMessage } = dalQrcodeExtension;
-
-    await openPopup(page, extensionId);
-
-    await page
-      .getByRole('tab', { name: getMessage('popup__scan_tab') })
-      .click();
-
-    const [scanFromImagePage] = await Promise.all([
-      context.waitForEvent('page'),
-      page
-        .getByRole('button', {
-          name: getMessage('popup_scan__scanFromImage_button'),
-        })
-        .click(),
+    const [newPage] = await Promise.all([
+      popupPage.page.context().waitForEvent('page'),
+      popupPage.getScanFromImageButton().click(),
     ]);
-    await scanFromImagePage.waitForLoadState();
-    const scanFromImagePageTitle = await scanFromImagePage.title();
-    expect(scanFromImagePageTitle).toEqual(getMessage('scanFromImage__title'));
+    await newPage.waitForLoadState();
+
+    expect(newPage.url()).toEqual(
+      new ScanImagePage(page, popupPage.extension).url,
+    );
   });
 
   test('カメラで読み取るボタンをクリックすると、読み取り用のタブを開く', async ({
-    context,
     page,
-    dalQrcodeExtension,
   }) => {
-    const { extensionId, getMessage } = dalQrcodeExtension;
-
-    await openPopup(page, extensionId);
-
-    await page
-      .getByRole('tab', { name: getMessage('popup__scan_tab') })
-      .click();
-
-    const [scanFromImagePage] = await Promise.all([
-      context.waitForEvent('page'),
-      page
-        .getByRole('button', {
-          name: getMessage('popup_scan__scanWithCamera_button'),
-        })
-        .click(),
+    const [newPage] = await Promise.all([
+      popupPage.page.context().waitForEvent('page'),
+      popupPage.getScanWithImageButton().click(),
     ]);
-    await scanFromImagePage.waitForLoadState();
-    const scanFromImagePageTitle = await scanFromImagePage.title();
-    expect(scanFromImagePageTitle).toEqual(getMessage('scanWithCamera__title'));
+    await newPage.waitForLoadState();
+
+    expect(newPage.url()).toEqual(
+      new ScanCameraPage(page, popupPage.extension).url,
+    );
   });
 });
