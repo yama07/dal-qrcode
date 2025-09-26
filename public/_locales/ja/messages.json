@@ -41,6 +41,12 @@
   "scanFromImage__copy_button": {
     "message": "コピー"
   },
+  "scanFromImage__noQrCodeFound_error": {
+    "message": "QRコードが見つかりませんでした。"
+  },
+  "scanFromImage__unknown_error": {
+    "message": "QRコードを読み取ることができませんでした。"
+  },
   "scanWithCamera__title": {
     "message": "Dal QRcode | カメラで読み取る"
   },

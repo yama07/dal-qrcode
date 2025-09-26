@@ -41,6 +41,12 @@
   "scanFromImage__copy_button": {
     "message": "Copy"
   },
+  "scanFromImage__noQrCodeFound_error": {
+    "message": "No QR code found."
+  },
+  "scanFromImage__unknown_error": {
+    "message": "Failed to scan the QR code."
+  },
   "scanWithCamera__title": {
     "message": "Dal QRcode | Scan with Camera"
   },

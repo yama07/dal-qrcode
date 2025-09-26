@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 export type AssetName =
+  | 'non-qrcode.png'
   | 'qrcode-text-Dalmatian.png'
   | 'qrcode-text-Dalmatian.y4m'
   | 'qrcode-url-http.png'

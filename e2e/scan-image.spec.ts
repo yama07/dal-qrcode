@@ -124,3 +124,41 @@ test('画像をドラッグ&ドロップを選択して、テキストのQRコ�
 
   expect(result).toEqual('Dalmatian');
 });
+
+test('QRコードではない画像を選択すると、エラーになる', async ({
+  page,
+  dalQrcodeExtension,
+}) => {
+  const scanImagePage = new ScanImagePage(page, dalQrcodeExtension);
+
+  await scanImagePage.goto();
+  await scanImagePage.setImageFileWithDragAndDrop(
+    getAssetPath('non-qrcode.png'),
+  );
+  await scanImagePage.getScanButton().click();
+
+  const alertMessage = (await scanImagePage.getAlert().textContent())?.trim();
+
+  expect(alertMessage).toEqual(
+    scanImagePage.getMessage('scanFromImage__noQrCodeFound_error'),
+  );
+});
+
+test('画像ではないファイルを選択すると、エラーになる', async ({
+  page,
+  dalQrcodeExtension,
+}) => {
+  const scanImagePage = new ScanImagePage(page, dalQrcodeExtension);
+
+  await scanImagePage.goto();
+  await scanImagePage.setImageFileWithDragAndDrop(
+    getAssetPath('qrcode-text-Dalmatian.y4m'),
+  );
+  await scanImagePage.getScanButton().click();
+
+  const alertMessage = (await scanImagePage.getAlert().textContent())?.trim();
+
+  expect(alertMessage).toEqual(
+    scanImagePage.getMessage('scanFromImage__unknown_error'),
+  );
+});

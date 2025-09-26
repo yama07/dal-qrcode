@@ -1,16 +1,18 @@
 import { Page } from '@playwright/test';
 import { Extension } from './extensions-page';
-import { getMessage } from '../utils/i18n';
+import { getMessage as _getMessage } from '../utils/i18n';
 import { dragAndDrop } from '../utils/drag-and-drop';
 
 export class ScanImagePage {
   readonly url: string;
+  readonly getMessage: (key: Parameters<typeof _getMessage>[0]) => string;
 
   constructor(
     public readonly page: Page,
     public readonly extension: Extension,
   ) {
     this.url = `chrome-extension://${this.extension.id}/scan-image.html`;
+    this.getMessage = (key) => _getMessage(key, this.extension.lang);
   }
 
   async goto() {
@@ -25,9 +27,7 @@ export class ScanImagePage {
   async setImageFileWithDragAndDrop(path: string) {
     await dragAndDrop(
       this.page,
-      this.page.getByLabel(
-        getMessage('scanFromImage__dropzone_label', this.extension.lang),
-      ),
+      this.page.getByLabel(this.getMessage('scanFromImage__dropzone_label')),
       path,
       'qrcode-text-Dalmatian.png',
       'image/png',
@@ -36,7 +36,7 @@ export class ScanImagePage {
 
   getScanButton() {
     return this.page.getByRole('button', {
-      name: getMessage('scanFromImage__scan_button', this.extension.lang),
+      name: this.getMessage('scanFromImage__scan_button'),
     });
   }
 
@@ -46,13 +46,17 @@ export class ScanImagePage {
 
   getOpenUrlButton() {
     return this.page.getByRole('button', {
-      name: getMessage('scanWithCamera__openUrl_button', this.extension.lang),
+      name: this.getMessage('scanWithCamera__openUrl_button'),
     });
   }
 
   getCopyButton() {
     return this.page.getByRole('button', {
-      name: getMessage('scanWithCamera__copy_button', this.extension.lang),
+      name: this.getMessage('scanWithCamera__copy_button'),
     });
+  }
+
+  getAlert() {
+    return this.page.getByRole('alert');
   }
 }

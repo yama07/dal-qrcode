@@ -42,7 +42,19 @@
       })
       .catch((error) => {
         console.error('Error', error);
-        appState = { state: 'error', error };
+        if (typeof error === 'string' && error.includes('No QR code found')) {
+          appState = {
+            state: 'error',
+            error: browser.i18n.getMessage(
+              'scanFromImage__noQrCodeFound_error',
+            ),
+          };
+        } else {
+          appState = {
+            state: 'error',
+            error: browser.i18n.getMessage('scanFromImage__unknown_error'),
+          };
+        }
       });
   }
 
