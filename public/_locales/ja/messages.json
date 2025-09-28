@@ -67,5 +67,11 @@
   },
   "scanWithCamera__notAvailableCamera_error": {
     "message": "利用可能なカメラがありません。"
+  },
+  "scanWithCamera__unknownCamera_error": {
+    "message": "カメラを取得できませんでした。"
+  },
+  "scanWithCamera__unknown_error": {
+    "message": "QRコードを読み取ることができませんでした。"
   }
 }

@@ -110,3 +110,32 @@ test.describe('テキストのQRコードを読み取ることができる', () 
     });
   });
 });
+
+test.describe('カメラの権限を与えない', () => {
+  test.use({
+    context: createExtensionTestContext(),
+  });
+
+  let scanCameraPage: ScanCameraPage;
+
+  test.beforeEach(
+    'カメラで読み取りをおこなう',
+    async ({ context, page, dalQrcodeExtension }) => {
+      await context.grantPermissions([]);
+
+      scanCameraPage = new ScanCameraPage(page, dalQrcodeExtension);
+
+      await scanCameraPage.goto();
+    },
+  );
+
+  test('エラーメッセージが表示される', async ({}) => {
+    const alertMessage = (
+      await scanCameraPage.getAlert().textContent()
+    )?.trim();
+
+    expect(alertMessage).toEqual(
+      scanCameraPage.getMessage('scanWithCamera__notAvailableCamera_error'),
+    );
+  });
+});

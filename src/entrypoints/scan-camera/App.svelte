@@ -73,7 +73,10 @@
       })
       .catch((error) => {
         console.error('Error', error);
-        appState = { state: 'error', error: error };
+        appState = {
+          state: 'error',
+          error: browser.i18n.getMessage('scanWithCamera__unknownCamera_error'),
+        };
       });
   });
 
@@ -104,7 +107,10 @@
     if (error === QrScanner.NO_QR_CODE_FOUND) return;
 
     console.error('Error decoding QR code:', error);
-    appState = { state: 'error', error: error };
+    appState = {
+      state: 'error',
+      error: browser.i18n.getMessage('scanWithCamera__unknown_error'),
+    };
   }
 
   function startScanning() {

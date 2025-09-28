@@ -67,5 +67,11 @@
   },
   "scanWithCamera__notAvailableCamera_error": {
     "message": "No available camera."
+  },
+  "scanWithCamera__unknownCamera_error": {
+    "message": "Unable to access the camera."
+  },
+  "scanWithCamera__unknown_error": {
+    "message": "Failed to scan the QR code."
   }
 }

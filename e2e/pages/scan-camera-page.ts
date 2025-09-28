@@ -1,15 +1,17 @@
 import { Page } from '@playwright/test';
 import { Extension } from './extensions-page';
-import { getMessage } from '../utils/i18n';
+import { getMessage as _getMessage } from '../utils/i18n';
 
 export class ScanCameraPage {
   readonly url: string;
+  readonly getMessage: (key: Parameters<typeof _getMessage>[0]) => string;
 
   constructor(
     public readonly page: Page,
     public readonly extension: Extension,
   ) {
     this.url = `chrome-extension://${extension.id}/scan-camera.html`;
+    this.getMessage = (key) => _getMessage(key, this.extension.lang);
   }
 
   async goto() {
@@ -19,7 +21,7 @@ export class ScanCameraPage {
 
   getStartButton() {
     return this.page.getByRole('button', {
-      name: getMessage('scanWithCamera__start_button', this.extension.lang),
+      name: this.getMessage('scanWithCamera__start_button'),
     });
   }
 
@@ -29,13 +31,17 @@ export class ScanCameraPage {
 
   getOpenUrlButton() {
     return this.page.getByRole('button', {
-      name: getMessage('scanWithCamera__openUrl_button', this.extension.lang),
+      name: this.getMessage('scanWithCamera__openUrl_button'),
     });
   }
 
   getCopyButton() {
     return this.page.getByRole('button', {
-      name: getMessage('scanWithCamera__copy_button', this.extension.lang),
+      name: this.getMessage('scanWithCamera__copy_button'),
     });
+  }
+
+  getAlert() {
+    return this.page.getByRole('alert');
   }
 }
