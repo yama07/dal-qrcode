@@ -18,7 +18,7 @@
         state: 'completed';
         result: { imgDataUrl: string };
       }
-    | { state: 'error'; error: Error };
+    | { state: 'error'; error: string };
 
   let appState = $state<AppState>({ state: 'idle' });
   let text: string = $state('');
@@ -43,10 +43,22 @@
         appState = { state: 'completed', result: { imgDataUrl: result } };
       })
       .catch((error: Error) => {
-        appState =
-          error.message === 'No input text'
-            ? { state: 'idle' }
-            : { state: 'error', error };
+        if (error.message === 'No input text') {
+          appState = { state: 'idle' };
+        } else if (
+          error.message ===
+          'The amount of data is too big to be stored in a QR Code'
+        ) {
+          appState = {
+            state: 'error',
+            error: browser.i18n.getMessage('popup_generate__tooLongText_error'),
+          };
+        } else {
+          appState = {
+            state: 'error',
+            error: browser.i18n.getMessage('popup_generate__unknown_error'),
+          };
+        }
       });
   });
 
@@ -93,7 +105,7 @@
   {#if appState.state === 'error'}
     <Alert variant="destructive">
       <MdiAlertCircleOutline />
-      <AlertDescription>{appState.error.message}</AlertDescription>
+      <AlertDescription>{appState.error}</AlertDescription>
     </Alert>
   {:else}
     <div class="flex justify-end gap-4">

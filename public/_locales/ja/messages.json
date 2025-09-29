@@ -20,6 +20,12 @@
   "popup_generate__textarea_placeholder": {
     "message": "ここにURLやテキストを入力してください"
   },
+  "popup_generate__tooLongText_error": {
+    "message": "テキストが長すぎるため、QRコードを生成できません。"
+  },
+  "popup_generate__unknown_error": {
+    "message": "QRコードを生成できませんでした。"
+  },
   "popup_scan__scanFromImage_button": {
     "message": "画像から読み取る"
   },

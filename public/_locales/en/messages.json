@@ -20,6 +20,12 @@
   "popup_generate__textarea_placeholder": {
     "message": "Enter a URL or text here"
   },
+  "popup_generate__tooLongText_error": {
+    "message": "The text is too long to generate a QR code."
+  },
+  "popup_generate__unknown_error": {
+    "message": "Failed to generate the QR code."
+  },
   "popup_scan__scanFromImage_button": {
     "message": "Scan from Image"
   },

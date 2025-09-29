@@ -33,6 +33,17 @@ test.describe('生成', () => {
     expect(fooQRSrc).not.toBe(barQRSrc);
   });
 
+  test('テキストエリアを長いテキストを入力するとエラーになる', async () => {
+    // 5 x 500 = 2,500文字
+    await popupPage.getInputTextarea().fill('doggo'.repeat(500));
+
+    const alertMessage = (await popupPage.getAlert().textContent())?.trim();
+
+    expect(alertMessage).toEqual(
+      popupPage.getMessage('popup_generate__tooLongText_error'),
+    );
+  });
+
   test('コピーボタンをクリックすると、クリップボードにQRコードの画像がコピーされる', async ({
     context,
   }) => {
