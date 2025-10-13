@@ -8,7 +8,22 @@
   <br>
 </h1>
 
-<h4 align="center">A simple QR code generation web browser extension 🐾</h4>
+<p align="center">A simple QR code generation and scanning web browser extension 🐾</p>
+
+## Overview
+
+This extension provides a simple and intuitive way to generate QR codes from URLs or scan QR codes from images or the camera. It's designed for ease of use and quick access to QR code functionality.
+
+## Features
+
+- 🌐 **URL QR Code Generation**: Generate QR codes for the current tab's URL.
+- ⌨️ **Manual URL Input**: Manually enter URLs to generate QR codes.
+- 🖼 **Image QR Code Reading**: Read QR codes from image files.
+- 📸 **Camera QR Code Reading**: Read QR codes directly from the device's camera feed.
+- 🐶 **Simple Interface**: Clean and intuitive user interface.
+- 🌐 **Localized UI**: User interface supports both English and Japanese.
+- 🐾 **Cross-Platform Support**: Compatible with both Google Chrome and Firefox.
+- ✅ **Automated Testing**: Supports unit tests (npm run test) and end-to-end tests (npm run e2e).
 
 ## Development
 
@@ -24,4 +39,11 @@ npm run zip
 npm run dev:firefox
 npm run build:firefox
 npm run zip:firefox
+```
+
+## Testing
+
+```sh
+npm run test
+npm run e2e
 ```
