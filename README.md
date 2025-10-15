@@ -25,19 +25,18 @@ This extension provides a simple and intuitive way to generate QR codes from URL
 - 🐶 **Simple Interface**: Clean and intuitive user interface.
 - 🌐 **Localized UI**: User interface supports both English and Japanese.
 - 🐾 **Cross-Platform Support**: Compatible with both Google Chrome and Firefox.
-- ✅ **Automated Testing**: Supports unit tests (npm run test) and end-to-end tests (npm run e2e).
 
 ## Development
 
 ```sh
 npm install
 
-## for Google Chrome
+## Google Chrome
 npm run dev
 npm run build
 npm run zip
 
-## for Firefox
+## Firefox
 npm run dev:firefox
 npm run build:firefox
 npm run zip:firefox
@@ -46,6 +45,14 @@ npm run zip:firefox
 ## Testing
 
 ```sh
+## Unit Testing (Vitest)
 npm run test
+
+## End-to-End Testing (Playwright)
+npm run build  # Build before e2e
 npm run e2e
 ```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
