@@ -20,6 +20,8 @@ This extension provides a simple and intuitive way to generate QR codes from URL
 - ⌨️ **Manual URL Input**: Manually enter URLs to generate QR codes.
 - 🖼 **Image QR Code Reading**: Read QR codes from image files.
 - 📸 **Camera QR Code Reading**: Read QR codes directly from the device's camera feed.
+- ⚡️ **Offline Support**: QR code generation and scanning work completely offline—no internet connection required.
+- 🔒 **Privacy & Security**: All QR code processing is done locally. No data is sent outside your device, keeping your information safe and private.
 - 🐶 **Simple Interface**: Clean and intuitive user interface.
 - 🌐 **Localized UI**: User interface supports both English and Japanese.
 - 🐾 **Cross-Platform Support**: Compatible with both Google Chrome and Firefox.
