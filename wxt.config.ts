@@ -3,6 +3,7 @@ import { defineConfig } from 'wxt';
 import path from 'node:path';
 import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 import Icons from 'unplugin-icons/vite';
+import license from 'rollup-plugin-license';
 
 export default defineConfig({
   srcDir: 'src',
@@ -35,6 +36,15 @@ export default defineConfig({
           assets: FileSystemIconLoader('./src/assets', (svg) =>
             svg.replace(/fill="black"/, 'fill="currentColor"'),
           ),
+        },
+      }),
+      license({
+        thirdParty: {
+          multipleVersions: true,
+          output: {
+            file: path.join(__dirname, '.output', 'ThirdPartyNotices.txt'),
+            encoding: 'utf-8',
+          },
         },
       }),
     ],
