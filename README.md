@@ -56,3 +56,7 @@ npm run e2e
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+---
+
+**QR Code** is a registered trademark of DENSO WAVE INCORPORATED in Japan and in other countries.
