@@ -1,4 +1,4 @@
-name: Continuous integration
+name: Build & Test (Unit/E2E)
 
 on:
   workflow_dispatch:
