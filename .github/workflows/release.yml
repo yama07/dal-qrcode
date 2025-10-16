@@ -31,8 +31,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           draft: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
           files: |
-            .output/dal-qrcode-${{ github.ref_name }}-chrome.zip
-            .output/dal-qrcode-${{ github.ref_name }}-firefox.zip
-            .output/dal-qrcode-${{ github.ref_name }}-sources.zip
+            .output/dal-qrcode-*-chrome.zip
+            .output/dal-qrcode-*-firefox.zip
+            .output/dal-qrcode-*-sources.zip
             .output/ThirdPartyNotices.txt
