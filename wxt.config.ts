@@ -16,6 +16,13 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: "script-src 'self'; child-src 'self' blob:;",
     },
+    browser_specific_settings: {
+      gecko: {
+        data_collection_permissions: {
+          required: ['none'],
+        },
+      },
+    },
   },
   autoIcons: {
     baseIconPath: 'assets/icon.svg',
