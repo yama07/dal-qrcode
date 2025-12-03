@@ -21,6 +21,12 @@
 
 This extension provides a simple and intuitive way to generate QR codes from URLs or scan QR codes from images or the camera. It's designed for ease of use and quick access to QR code functionality.
 
+<div align="center">
+  
+  ![Overview](https://github.com/user-attachments/assets/d7bab9da-693a-42ae-9d01-c52904f6cd12)
+
+</div>
+
 ## Features
 
 - 🌐 **URL QR Code Generation**: Generate QR codes for the current tab's URL.
