@@ -12,8 +12,8 @@
 
 <div align="center">
 
-  [![chrome web store](https://github.com/user-attachments/assets/682b0083-311f-45d1-ac40-bd02fdd87e09)](https://chromewebstore.google.com/detail/dal-qrcode/afoepdfabajnbbkckponmbdjbadkaogi)
-  [![firefox browser add-ons](https://github.com/user-attachments/assets/7f03b498-0e15-44e5-b3fc-c7f6326c84be)](https://addons.mozilla.org/ja/firefox/addon/dal-qrcode)
+[![chrome web store](https://github.com/user-attachments/assets/682b0083-311f-45d1-ac40-bd02fdd87e09)](https://chromewebstore.google.com/detail/dal-qrcode/afoepdfabajnbbkckponmbdjbadkaogi)
+[![firefox browser add-ons](https://github.com/user-attachments/assets/7f03b498-0e15-44e5-b3fc-c7f6326c84be)](https://addons.mozilla.org/ja/firefox/addon/dal-qrcode)
 
 </div>
 
@@ -22,8 +22,8 @@
 This extension provides a simple and intuitive way to generate QR codes from URLs or scan QR codes from images or the camera. It's designed for ease of use and quick access to QR code functionality.
 
 <div align="center">
-  
-  ![Overview](https://github.com/user-attachments/assets/d7bab9da-693a-42ae-9d01-c52904f6cd12)
+
+![Overview](https://github.com/user-attachments/assets/d7bab9da-693a-42ae-9d01-c52904f6cd12)
 
 </div>
 
@@ -62,6 +62,7 @@ npm run zip:firefox
 npm run test
 
 ## End-to-End Testing (Playwright)
+npm run e2e:install-browser  # First time only
 npm run build  # Build before e2e
 npm run e2e
 ```
