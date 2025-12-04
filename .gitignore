@@ -30,3 +30,6 @@ web-ext.config.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# WXT
+.env.submit
