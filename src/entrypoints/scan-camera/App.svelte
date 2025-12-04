@@ -82,15 +82,13 @@
 
   $effect(() => {
     if (scanner && cameraId) {
-      console.log('Setting camera:', cameraId);
       scanner.setCamera(cameraId);
     }
   });
 
   function onDecode(result: QrScanner.ScanResult) {
-    console.log('Decoded QR code:', result.data);
-
     if (!scanner) return;
+
     scanner.stop();
     const imgDataUrl = scanner.$canvas.toDataURL('image/png');
 

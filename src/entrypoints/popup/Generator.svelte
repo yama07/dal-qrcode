@@ -25,7 +25,6 @@
 
   browser.tabs.query({ active: true, currentWindow: true }).then((tab) => {
     text = tab[0]?.url ?? '';
-    console.debug('tab:', text);
   });
 
   $effect(() => {
