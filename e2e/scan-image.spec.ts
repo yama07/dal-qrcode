@@ -52,13 +52,15 @@ test.describe('画像を選択して、テキストのQRコードを読み取る
     scheme: 'http',
     imagePath: getAssetPath('qrcode-url-http.png'),
     resultText: 'http://example.com/',
+    pageUrl: /https?:\/\/example\.com\/?/, // httpsにリダイレクトされる場合があるため
   },
   {
     scheme: 'https',
     imagePath: getAssetPath('qrcode-url-https.png'),
     resultText: 'https://example.com/',
+    pageUrl: 'https://example.com/',
   },
-].forEach(({ scheme, imagePath, resultText }) => {
+].forEach(({ scheme, imagePath, resultText, pageUrl }) => {
   test.describe(`画像を選択して、${scheme}のURLのQRコードを読み取ることができる`, () => {
     let scanImagePage: ScanImagePage;
 
@@ -88,13 +90,15 @@ test.describe('画像を選択して、テキストのQRコードを読み取る
     });
 
     test('URLを開くボタンをクリックすると、読み取ったURLを別タブで開く', async () => {
+      await scanImagePage.page.context().setOffline(false);
+
       const [newPage] = await Promise.all([
         scanImagePage.page.context().waitForEvent('page'),
         scanImagePage.getOpenUrlButton().click(),
       ]);
       await newPage.waitForLoadState();
 
-      expect(newPage.url()).toEqual(resultText);
+      await expect(newPage).toHaveURL(pageUrl);
     });
 
     test('コピーボタンをクリックすると、読み取った結果がクリップボードにコピーされること', async () => {

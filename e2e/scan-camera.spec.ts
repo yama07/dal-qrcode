@@ -51,13 +51,15 @@ test.describe('テキストのQRコードを読み取ることができる', () 
     scheme: 'http',
     context: createExtensionTestContext('qrcode-url-http.y4m'),
     resultText: 'http://example.com/',
+    pageUrl: /https?:\/\/example\.com\/?/, // httpsにリダイレクトされる場合があるため
   },
   {
     scheme: 'https',
     context: createExtensionTestContext('qrcode-url-https.y4m'),
     resultText: 'https://example.com/',
+    pageUrl: 'https://example.com/',
   },
-].forEach(({ scheme, context, resultText }) => {
+].forEach(({ scheme, context, resultText, pageUrl }) => {
   test.describe(`${scheme}のURLのQRコードを読み取ることができる`, () => {
     test.use({ context });
 
@@ -100,13 +102,15 @@ test.describe('テキストのQRコードを読み取ることができる', () 
     });
 
     test('URLを開くボタンをクリックすると、読み取ったURLを別タブで開く', async () => {
+      await scanCameraPage.page.context().setOffline(false);
+
       const [newPage] = await Promise.all([
         scanCameraPage.page.context().waitForEvent('page'),
         scanCameraPage.getOpenUrlButton().click(),
       ]);
       await newPage.waitForLoadState();
 
-      expect(newPage.url()).toEqual(resultText);
+      await expect(newPage).toHaveURL(pageUrl);
     });
   });
 });
