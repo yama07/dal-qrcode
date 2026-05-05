@@ -79,5 +79,11 @@
   },
   "scanWithCamera__unknown_error": {
     "message": "Failed to scan the QR code."
+  },
+  "contextMenu__generateFromLink": {
+    "message": "Generate QR code from URL"
+  },
+  "contextMenu__generateFromSelection": {
+    "message": "Generate QR code from selected text"
   }
 }

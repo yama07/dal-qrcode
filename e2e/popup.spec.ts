@@ -71,6 +71,39 @@ test.describe('生成', () => {
     const fileName = download.suggestedFilename();
     expect(fileName).toEqual('Dal-QRcode.png');
   });
+
+  test.describe('コンテキストメニュー連携', () => {
+    test('コンテキストデータがセットされている状態でポップアップを開くと、テキストエリアに連携された文字列がセットされている', async () => {
+      // 拡張機能のローカルストレージにコンテキストデータをセット
+      await popupPage.page.evaluate(() => {
+        return new Promise<void>((resolve, reject) => {
+          const localStorage = (window as any)?.chrome?.storage?.local;
+          if (!localStorage) {
+            reject(new Error('Extension storage API is not available.'));
+          }
+          localStorage.set(
+            {
+              'context-data': {
+                action: 'generate',
+                data: 'innu',
+              },
+            },
+            resolve(),
+          );
+        });
+      });
+
+      await popupPage.page.reload();
+      await expect(popupPage.getInputTextarea()).toHaveValue('innu');
+
+      // コンテキストデータからQRコードを作成した後は、コンテキストデータがクリアされるため、
+      // リロードするとデフォルトの動作となる
+      await popupPage.page.reload();
+      await expect(popupPage.getInputTextarea()).toHaveValue(
+        popupPage.page.url(),
+      );
+    });
+  });
 });
 
 test.describe('読み取り', () => {
