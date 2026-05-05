@@ -12,7 +12,7 @@ export default defineConfig({
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',
     default_locale: 'en',
-    permissions: ['tabs', 'clipboardWrite'],
+    permissions: ['tabs', 'clipboardWrite', 'contextMenus', 'storage'],
     content_security_policy: {
       extension_pages: "script-src 'self'; child-src 'self' blob:;",
     },
@@ -26,10 +26,6 @@ export default defineConfig({
   },
   autoIcons: {
     baseIconPath: 'assets/icon.svg',
-  },
-  webExt: {
-    startUrls: ['https://wxt.dev'],
-    openDevtools: true,
   },
   alias: {
     $lib: path.resolve('./src/lib'),

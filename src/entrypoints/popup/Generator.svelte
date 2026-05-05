@@ -10,6 +10,7 @@
   import { Card, CardContent } from '$lib/components/ui/card';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import { copyToClipboard, saveDataUrlAsFile } from '$lib/utils/browser';
+  import { contextData } from '$lib/utils/storage';
 
   type AppState =
     | { state: 'idle' }
@@ -23,8 +24,18 @@
   let appState = $state<AppState>({ state: 'idle' });
   let text: string = $state('');
 
-  browser.tabs.query({ active: true, currentWindow: true }).then((tab) => {
-    text = tab[0]?.url ?? '';
+  onMount(() => {
+    Promise.all([
+      contextData.getValue(),
+      browser.tabs.query({ active: true, currentWindow: true }),
+    ]).then(([contextValue, tabs]) => {
+      if (contextValue && contextValue.action == 'generate') {
+        text = contextValue.data;
+        contextData.removeValue();
+      } else {
+        text = tabs[0]?.url ?? '';
+      }
+    });
   });
 
   $effect(() => {

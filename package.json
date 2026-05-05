@@ -49,6 +49,6 @@
     "typescript": "5.9.3",
     "unplugin-icons": "23.0.1",
     "vitest": "4.1.4",
-    "wxt": "0.20.22"
+    "wxt": "0.20.25"
   }
 }
