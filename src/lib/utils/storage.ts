@@ -1,5 +1,5 @@
 type ContextData = {
-  action: 'generate';
+  action: 'generate' | 'scan';
   data: string;
 };
 

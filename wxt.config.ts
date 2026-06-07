@@ -12,6 +12,7 @@ export default defineConfig({
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',
     default_locale: 'en',
+    host_permissions: ['<all_urls>'],
     permissions: ['tabs', 'clipboardWrite', 'contextMenus', 'storage'],
     content_security_policy: {
       extension_pages: "script-src 'self'; child-src 'self' blob:;",

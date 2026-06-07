@@ -13,6 +13,7 @@
   import { Card, CardContent } from '$lib/components/ui/card';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import { copyToClipboard, isBrowsableUrl } from '$lib/utils/browser';
+  import { contextData } from '$lib/utils/storage';
 
   type AppState =
     | { state: 'idle' }
@@ -22,21 +23,41 @@
     | { state: 'error'; error: string | Error };
 
   let appState = $state<AppState>({ state: 'idle' });
-  let file = $state<File>();
+  let imgSrc = $state<File | Blob>();
+
+  onMount(() => {
+    contextData.getValue().then((contextValue) => {
+      if (contextValue && contextValue.action === 'scan') {
+        const url = contextValue.data;
+        contextData.removeValue();
+
+        fetch(url)
+          .then((response) => response.blob())
+          .then((blob) => (imgSrc = blob))
+          .catch((error) => {
+            console.error('Error', error);
+            appState = {
+              state: 'error',
+              error: browser.i18n.getMessage('scanFromImage__fetch_error'),
+            };
+          });
+      }
+    });
+  });
 
   $effect(() => {
-    if (file) appState = { state: 'loaded' };
+    if (imgSrc) appState = { state: 'loaded' };
   });
 
   function scanImage() {
-    if (!file) {
+    if (!imgSrc) {
       console.error('No files selected');
       return;
     }
 
     appState = { state: 'scanning' };
 
-    QrScanner.scanImage(file, { returnDetailedScanResult: true })
+    QrScanner.scanImage(imgSrc, { returnDetailedScanResult: true })
       .then((result) => {
         appState = { state: 'completed', result };
       })
@@ -59,7 +80,7 @@
   }
 
   function clear() {
-    file = undefined;
+    imgSrc = undefined;
     appState = { state: 'idle' };
   }
 
@@ -93,9 +114,9 @@
     <div class="flex w-full max-w-lg flex-col gap-6">
       <Card>
         <CardContent class="flex justify-center">
-          {#if file}
+          {#if imgSrc}
             <div class="relative">
-              <img src={URL.createObjectURL(file)} alt="preview" />
+              <img src={URL.createObjectURL(imgSrc)} alt="preview" />
               <MdiClearCircle
                 class="text-neutral-500 hover:text-neutral-900 text-3xl absolute top-2 right-2"
                 onclick={clear}
@@ -103,7 +124,7 @@
             </div>
           {:else}
             <Dropzone
-              bind:file
+              bind:file={imgSrc}
               label={browser.i18n.getMessage('scanFromImage__dropzone_label')}
             />
           {/if}

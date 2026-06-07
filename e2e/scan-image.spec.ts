@@ -1,3 +1,4 @@
+import { promises as fs } from 'node:fs';
 import { test, expect } from './fixtures';
 import { getAssetPath } from './utils/assets';
 import { ScanImagePage } from './pages/scan-image-page';
@@ -165,4 +166,53 @@ test('画像ではないファイルを選択すると、エラーになる', as
   expect(alertMessage).toEqual(
     scanImagePage.getMessage('scanFromImage__unknown_error'),
   );
+});
+
+test.describe('コンテキストメニュー連携', () => {
+  test('コンテキストデータがセットされている状態でQRコード読み込みを開くと、プレビューに連携された画像がセットされている', async ({
+    page,
+    dalQrcodeExtension,
+  }) => {
+    let scanImagePage = new ScanImagePage(page, dalQrcodeExtension);
+
+    const dataUrl = `data:image/png;base64,${await fs.readFile(
+      getAssetPath('qrcode-text-Dalmatian.png'),
+      {
+        encoding: 'base64',
+      },
+    )}`;
+
+    await scanImagePage.goto();
+    expect(scanImagePage.getScanButton()).toBeDisabled();
+
+    // 拡張機能のローカルストレージにコンテキストデータをセット
+    await scanImagePage.page.evaluate((data) => {
+      return new Promise<void>((resolve, reject) => {
+        const localStorage = (window as any)?.chrome?.storage?.local;
+        if (!localStorage) {
+          reject(new Error('Extension storage API is not available.'));
+        }
+        localStorage.set(
+          {
+            'context-data': {
+              action: 'scan',
+              data: data,
+            },
+          },
+          resolve(),
+        );
+      });
+    }, dataUrl);
+
+    await scanImagePage.page.reload();
+
+    // プレビューがセットされて、読み取り可能な状態となる
+    await expect(scanImagePage.getPreviewImg()).toHaveAttribute('src');
+    await expect(scanImagePage.getScanButton()).toBeEnabled();
+
+    // コンテキストデータからQRコードを作成した後は、コンテキストデータがクリアされるため、
+    // リロードするとデフォルトの動作となる
+    await scanImagePage.page.reload();
+    await expect(scanImagePage.getScanButton()).toBeDisabled();
+  });
 });
