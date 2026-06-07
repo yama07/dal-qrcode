@@ -50,6 +50,9 @@
   "scanFromImage__noQrCodeFound_error": {
     "message": "No QR code found."
   },
+  "scanFromImage__fetch_error": {
+    "message": "Failed to fetch the image."
+  },
   "scanFromImage__unknown_error": {
     "message": "Failed to scan the QR code."
   },
@@ -85,5 +88,8 @@
   },
   "contextMenu__generateFromSelection": {
     "message": "Generate QR code from selected text"
+  },
+  "contextMenu__scanFromImage": {
+    "message": "Scan QR code from image"
   }
 }

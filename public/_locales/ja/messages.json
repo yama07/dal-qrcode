@@ -50,6 +50,9 @@
   "scanFromImage__noQrCodeFound_error": {
     "message": "QRコードが見つかりませんでした。"
   },
+  "scanFromImage__fetch_error": {
+    "message": "画像を取得することができませんでした。"
+  },
   "scanFromImage__unknown_error": {
     "message": "QRコードを読み取ることができませんでした。"
   },
@@ -85,5 +88,8 @@
   },
   "contextMenu__generateFromSelection": {
     "message": "選択したテキストからQRコードを生成"
+  },
+  "contextMenu__scanFromImage": {
+    "message": "QRコードを読み取る"
   }
 }

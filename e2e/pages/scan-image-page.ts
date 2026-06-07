@@ -34,6 +34,10 @@ export class ScanImagePage {
     );
   }
 
+  getPreviewImg() {
+    return this.page.getByRole('img', { name: 'preview' });
+  }
+
   getScanButton() {
     return this.page.getByRole('button', {
       name: this.getMessage('scanFromImage__scan_button'),
