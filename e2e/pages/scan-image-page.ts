@@ -10,8 +10,13 @@ export class ScanImagePage {
   constructor(
     public readonly page: Page,
     public readonly extension: Extension,
+    public readonly query: { src: string } | null = null,
   ) {
-    this.url = `chrome-extension://${this.extension.id}/scan-image.html`;
+    if (query) {
+      this.url = `chrome-extension://${this.extension.id}/scan-image.html?${new URLSearchParams(query).toString()}`;
+    } else {
+      this.url = `chrome-extension://${this.extension.id}/scan-image.html`;
+    }
     this.getMessage = (key) => _getMessage(key, this.extension.lang);
   }
 

@@ -13,7 +13,7 @@ export default defineConfig({
     description: '__MSG_extDescription__',
     default_locale: 'en',
     host_permissions: ['<all_urls>'],
-    permissions: ['tabs', 'clipboardWrite', 'contextMenus', 'storage'],
+    permissions: ['tabs', 'clipboardWrite', 'contextMenus'],
     content_security_policy: {
       extension_pages: "script-src 'self'; child-src 'self' blob:;",
     },

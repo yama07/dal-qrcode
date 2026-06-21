@@ -2,14 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { fakeBrowser } from 'wxt/testing';
 
 import background from '../index';
-import { contextData } from '$lib/utils/storage';
 
 describe('Background Entrypoint', () => {
   let contextMenuClickedListener: any;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     fakeBrowser.reset();
-    await contextData.removeValue();
 
     // Mock contextMenus.onClicked.addListener to store the listener
     contextMenuClickedListener = null;
@@ -23,9 +21,9 @@ describe('Background Entrypoint', () => {
     // Mock i18n.getMessage
     fakeBrowser.i18n.getMessage = vi.fn(() => '');
 
-    // Mock browser.action.openPopup
-    const openPopupMock = vi.fn();
-    fakeBrowser.action.openPopup = openPopupMock;
+    // Mock browser.action.setPopup and openPopup
+    fakeBrowser.action.setPopup = vi.fn().mockResolvedValue(undefined);
+    fakeBrowser.action.openPopup = vi.fn().mockResolvedValue(undefined);
   });
 
   it('インストール時にコンテキストメニューが登録される', async () => {
@@ -47,7 +45,7 @@ describe('Background Entrypoint', () => {
     );
   });
 
-  it('コンテキストメニュー「URLからQRコードを生成」をクリックすると、コンテキストデータがストレージにセットされてポップアップが開く', async () => {
+  it('コンテキストメニュー「URLからQRコードを生成」をクリックすると、popup.html にクエリが付いてポップアップが開く', async () => {
     background.main();
 
     // Call the stored listener directly
@@ -56,14 +54,18 @@ describe('Background Entrypoint', () => {
       linkUrl: 'https://example.com',
     });
 
-    expect(await contextData.getValue()).toEqual({
-      action: 'generate',
-      data: 'https://example.com',
+    await vi.waitFor(() => {
+      expect(fakeBrowser.action.setPopup).toHaveBeenNthCalledWith(1, {
+        popup: 'popup.html?text=https%3A%2F%2Fexample.com',
+      });
+      expect(fakeBrowser.action.openPopup).toHaveBeenCalledTimes(1);
+      expect(fakeBrowser.action.setPopup).toHaveBeenNthCalledWith(2, {
+        popup: 'popup.html',
+      });
     });
-    expect(fakeBrowser.action.openPopup).toHaveBeenCalled();
   });
 
-  it('コンテキストメニュー「選択したテキストからQRコードを生成」をクリックすると、コンテキストデータがストレージにセットされてポップアップが開く', async () => {
+  it('コンテキストメニュー「選択したテキストからQRコードを生成」をクリックすると、popup.html にクエリが付いてポップアップが開く', async () => {
     background.main();
 
     // Call the stored listener directly
@@ -72,10 +74,35 @@ describe('Background Entrypoint', () => {
       selectionText: 'bow wow',
     });
 
-    expect(await contextData.getValue()).toEqual({
-      action: 'generate',
-      data: 'bow wow',
+    await vi.waitFor(() => {
+      expect(fakeBrowser.action.setPopup).toHaveBeenNthCalledWith(1, {
+        popup: 'popup.html?text=bow+wow',
+      });
+      expect(fakeBrowser.action.openPopup).toHaveBeenCalledTimes(1);
+      expect(fakeBrowser.action.setPopup).toHaveBeenNthCalledWith(2, {
+        popup: 'popup.html',
+      });
     });
-    expect(fakeBrowser.action.openPopup).toHaveBeenCalled();
+  });
+
+  it('コンテキストメニュー「画像からQRコードを読み取る」をクリックすると、scan-image.html にクエリが付いたタブが開く', () => {
+    background.main();
+
+    fakeBrowser.tabs.create = vi.fn();
+
+    contextMenuClickedListener({
+      menuItemId: 'scan_from_image',
+      mediaType: 'image',
+      srcUrl: 'https://example.com/image.png',
+    });
+
+    expect(fakeBrowser.tabs.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining(
+          'scan-image.html?src=https%3A%2F%2Fexample.com%2Fimage.png',
+        ),
+        active: true,
+      }),
+    );
   });
 });

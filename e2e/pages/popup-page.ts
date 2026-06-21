@@ -9,8 +9,13 @@ export class PopupPage {
   constructor(
     public readonly page: Page,
     public readonly extension: Extension,
+    public readonly query: { text: string } | null = null,
   ) {
-    this.url = `chrome-extension://${extension.id}/popup.html`;
+    if (query) {
+      this.url = `chrome-extension://${extension.id}/popup.html?${new URLSearchParams(query).toString()}`;
+    } else {
+      this.url = `chrome-extension://${extension.id}/popup.html`;
+    }
     this.getMessage = (key) => _getMessage(key, this.extension.lang);
   }
 
