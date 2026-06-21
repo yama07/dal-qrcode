@@ -28,7 +28,10 @@ describe('Background Entrypoint', () => {
 
   it('インストール時にコンテキストメニューが登録される', async () => {
     background.main();
-    await fakeBrowser.runtime.onInstalled.trigger();
+    await fakeBrowser.runtime.onInstalled.trigger({
+      reason: 'install',
+      temporary: false,
+    });
 
     expect(fakeBrowser.contextMenus.create).toHaveBeenCalledWith(
       expect.objectContaining({
