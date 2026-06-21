@@ -1,5 +1,3 @@
-import { contextData } from '$lib/utils/storage';
-
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(() => {
     browser.contextMenus.create({
@@ -21,31 +19,39 @@ export default defineBackground(() => {
     });
   });
 
+  function openGenPopup(text: string) {
+    const params = new URLSearchParams({ text });
+    const action = browser.action ?? browser.browserAction;
+
+    action
+      .setPopup({ popup: `popup.html?${params.toString()}` })
+      .then(() => action.openPopup())
+      .then(() => action.setPopup({ popup: `popup.html` }));
+  }
+
+  function openScanImgPage(src: string) {
+    const params = new URLSearchParams({ src });
+
+    browser.tabs.create({
+      url: `${browser.runtime.getURL('/scan-image.html')}?${params.toString()}`,
+      active: true,
+    });
+  }
+
   browser.contextMenus.onClicked.addListener((info) => {
-    if (info.menuItemId === 'generate_from_link') {
-      contextData.setValue(
-        info.linkUrl ? { action: 'generate', data: info.linkUrl } : null,
-      );
-      (browser.action ?? browser.browserAction).openPopup();
-    } else if (info.menuItemId === 'generate_from_selection') {
-      contextData.setValue(
-        info.selectionText
-          ? { action: 'generate', data: info.selectionText }
-          : null,
-      );
-      (browser.action ?? browser.browserAction).openPopup();
+    if (info.menuItemId === 'generate_from_link' && info.linkUrl) {
+      openGenPopup(info.linkUrl);
+    } else if (
+      info.menuItemId === 'generate_from_selection' &&
+      info.selectionText
+    ) {
+      openGenPopup(info.selectionText);
     } else if (
       info.menuItemId === 'scan_from_image' &&
-      info.mediaType === 'image'
+      info.mediaType === 'image' &&
+      info.srcUrl
     ) {
-      contextData.setValue(
-        info.srcUrl ? { action: 'scan', data: info.srcUrl } : null,
-      );
-
-      browser.tabs.create({
-        url: browser.runtime.getURL('/scan-image.html'),
-        active: true,
-      });
+      openScanImgPage(info.srcUrl);
     }
   });
 });

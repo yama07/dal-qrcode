@@ -13,7 +13,6 @@
   import { Card, CardContent } from '$lib/components/ui/card';
   import Textarea from '$lib/components/ui/textarea/textarea.svelte';
   import { copyToClipboard, isBrowsableUrl } from '$lib/utils/browser';
-  import { contextData } from '$lib/utils/storage';
 
   type AppState =
     | { state: 'idle' }
@@ -26,23 +25,21 @@
   let imgSrc = $state<File | Blob>();
 
   onMount(() => {
-    contextData.getValue().then((contextValue) => {
-      if (contextValue && contextValue.action === 'scan') {
-        const url = contextValue.data;
-        contextData.removeValue();
+    const params = new URLSearchParams(window.location.search);
+    const srcParam = params.get('src');
 
-        fetch(url)
-          .then((response) => response.blob())
-          .then((blob) => (imgSrc = blob))
-          .catch((error) => {
-            console.error('Error', error);
-            appState = {
-              state: 'error',
-              error: browser.i18n.getMessage('scanFromImage__fetch_error'),
-            };
-          });
-      }
-    });
+    if (srcParam) {
+      fetch(srcParam)
+        .then((response) => response.blob())
+        .then((blob) => (imgSrc = blob))
+        .catch((error) => {
+          console.error('Error', error);
+          appState = {
+            state: 'error',
+            error: browser.i18n.getMessage('scanFromImage__fetch_error'),
+          };
+        });
+    }
   });
 
   $effect(() => {
